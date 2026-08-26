@@ -79,7 +79,7 @@ Signing out clears the cached pages and the outbox from the device.
 ### 1. Install
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/reshuk-code/traco
 cd traco
 npm install
 ```
