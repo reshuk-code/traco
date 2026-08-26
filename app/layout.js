@@ -14,7 +14,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+/**
+ * Absolute base for the Open Graph / Twitter tags. An explicit
+ * NEXT_PUBLIC_SITE_URL wins; otherwise Vercel's own production domain is used,
+ * so a deployment emits real URLs even if nobody sets a variable.
+ */
+function resolveSiteUrl() {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
+  return "http://localhost:3000";
+}
+
+const siteUrl = resolveSiteUrl();
 
 export const metadata = {
   metadataBase: new URL(siteUrl),

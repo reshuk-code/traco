@@ -107,9 +107,18 @@ generate a cookie secret:
 openssl rand -base64 32
 ```
 
-When you deploy, also set `NEXT_PUBLIC_SITE_URL` to the public URL. It backs
-`metadataBase`, which is what makes the Open Graph tags absolute — without it
-they point at `localhost` and link previews break when the site is shared.
+When you deploy, `metadataBase` resolves the site's public URL in this order:
+
+1. `NEXT_PUBLIC_SITE_URL`, if you set it (use this for a custom domain).
+2. `VERCEL_PROJECT_PRODUCTION_URL`, which Vercel injects automatically.
+3. `http://localhost:3000`.
+
+So a Vercel deployment emits correct Open Graph URLs with no configuration.
+
+Note that in development the generated OG **image** URLs point at `localhost`
+even when a site URL is set — Next.js resolves file-convention images against
+the request origin there. A production build uses `metadataBase`, which is what
+gets shared.
 
 ### 4. Create the tables
 
