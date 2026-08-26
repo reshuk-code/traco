@@ -126,3 +126,20 @@ body {
   border: 1px solid var(--border);
   border-radius: 1rem;
 }
+
+/*
+ * Own the spin rather than leaning on a utility: this pins the rotation origin
+ * to the centre (SVG transform origins vary) and keeps the timing in one place.
+ */
+@keyframes traco-spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  transform-origin: 50% 50%;
+  animation: traco-spin 0.7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation-duration: 1.6s; }
+}

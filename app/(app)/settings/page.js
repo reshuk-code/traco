@@ -1,5 +1,8 @@
+import PageHeader from '@/app/components/page-header';
+import SignOutButton from '@/app/components/sign-out-button';
 import SettingsForm from './settings-form';
-import { requireUser, getSettings } from '@/lib/data';
+import { requireUser, getSettings, getToday, loadLedger } from '@/lib/data';
+import { summarize } from '@/lib/budget';
 import { sql } from '@/lib/db';
 import { formatMoney } from '@/lib/money';
 
@@ -10,60 +13,81 @@ export const metadata = { title: 'Settings · traco' };
 export default async function SettingsPage() {
   const user = await requireUser();
   const settings = await getSettings(user.id);
+  const today = await getToday(settings.timezone);
 
-  const goalChanges = await sql`
-    select id, daily_goal_cents, effective_from::text as effective_from
-    from public.goal_history
-    where user_id = ${user.id}
-    order by effective_from desc, created_at desc
-    limit 20
-  `;
+  const [ledger, goalChanges] = await Promise.all([
+    loadLedger(user.id, settings, today),
+    sql`
+      select distinct on (effective_from)
+             id, daily_goal_cents, effective_from::text as effective_from
+      from public.goal_history
+      where user_id = ${user.id}
+      order by effective_from desc, created_at desc
+      limit 20
+    `,
+  ]);
+
+  // Context for the goal field: what they actually spend, not what they hoped to.
+  const stats = summarize(ledger);
+  const averageLabel =
+    stats.daysWithSpending > 0
+      ? `You're averaging ${formatMoney(
+          Math.round(stats.spentCents / stats.daysWithSpending),
+          settings.currency,
+        )} a day over the last ${stats.daysWithSpending} ${
+          stats.daysWithSpending === 1 ? 'day' : 'days'
+        }.`
+      : null;
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
-        <p className="mt-1 text-sm text-muted">
-          Change your name, your daily goal, and how your days are counted.
-        </p>
+    <>
+      <PageHeader title="Settings" />
+
+      <div className="mx-auto flex max-w-2xl flex-col gap-3.5 px-5 py-4">
+        {/*
+          React resets an uncontrolled form after its action runs, back to the
+          defaultValue captured when the input mounted — so a saved goal would
+          snap back to the old number, and saving again would write that stale
+          value. Keying on the saved values remounts the form with fresh ones.
+        */}
+        <SettingsForm
+          key={`${settings.daily_goal_cents}:${settings.currency}:${settings.timezone}:${settings.rollover_enabled}:${user.name}`}
+          user={user}
+          settings={settings}
+          averageLabel={averageLabel}
+        />
+
+        {goalChanges.length > 0 && (
+          <section className="card p-[18px]">
+            <h2 className="text-[13px] font-semibold">Goal changes</h2>
+            <p className="mt-1 text-xs leading-relaxed text-muted">
+              Past days keep the goal that applied at the time.
+            </p>
+            <ul className="mt-2.5 divide-y divide-border border-t border-border">
+              {goalChanges.map((g) => (
+                <li key={g.id} className="flex items-center justify-between py-3 text-[13px]">
+                  <span className="text-muted">
+                    from{' '}
+                    {new Date(`${g.effective_from}T00:00:00`).toLocaleDateString('en-US', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                  </span>
+                  <span className="font-semibold tabular-nums">
+                    {formatMoney(g.daily_goal_cents, settings.currency)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <div className="flex items-center justify-between gap-4 px-0.5 py-1">
+          <span className="min-w-0 truncate text-[13px] text-muted">{user.email}</span>
+          <SignOutButton />
+        </div>
       </div>
-
-      <section className="card p-5 sm:p-6">
-        <SettingsForm user={user} settings={settings} />
-      </section>
-
-      <section className="card p-5 sm:p-6">
-        <h2 className="text-sm font-semibold">Account</h2>
-        <p className="mt-2 text-sm text-muted">
-          Signed in as <span className="text-text">{user.email}</span>
-        </p>
-      </section>
-
-      {goalChanges.length > 0 && (
-        <section className="card p-5 sm:p-6">
-          <h2 className="text-sm font-semibold">Goal changes</h2>
-          <p className="mt-1 text-xs text-muted">
-            Past days are compared against the goal that was set at the time.
-          </p>
-          <ul className="mt-3 divide-y divide-border">
-            {goalChanges.map((g) => (
-              <li key={g.id} className="flex items-center justify-between py-2.5 text-sm">
-                <span className="text-muted">
-                  from{' '}
-                  {new Date(`${g.effective_from}T00:00:00`).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                  })}
-                </span>
-                <span className="font-semibold tabular-nums">
-                  {formatMoney(g.daily_goal_cents, settings.currency)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-    </div>
+    </>
   );
 }

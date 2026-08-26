@@ -22,25 +22,23 @@ export default function GoalMeter({
 
   return (
     <div>
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="flex items-end justify-between gap-4">
         <div>
-          <p className="text-sm text-muted">Spent today</p>
-          <p className="mt-1 text-4xl font-bold tracking-tight tabular-nums">
+          <p className="text-xs text-muted">Spent today</p>
+          <p className="mt-1 text-4xl font-bold leading-none tracking-tight tabular-nums">
             {formatMoney(spentCents, currency)}
           </p>
         </div>
         <div className="text-right">
-          <p className="text-sm text-muted">
-            {rollover ? 'Available today' : 'Daily goal'}
-          </p>
-          <p className="mt-1 text-xl font-semibold tabular-nums">
+          <p className="text-xs text-muted">{rollover ? 'Available' : 'Goal'}</p>
+          <p className="mt-1 text-lg font-bold tabular-nums">
             {formatMoney(allowanceCents, currency)}
           </p>
         </div>
       </div>
 
       <div
-        className="mt-4 h-3 w-full overflow-hidden rounded-full bg-track"
+        className="mt-3.5 h-2 w-full overflow-hidden rounded-full bg-track"
         role="progressbar"
         aria-valuenow={Math.round(width)}
         aria-valuemin={0}
@@ -53,18 +51,18 @@ export default function GoalMeter({
         />
       </div>
 
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-sm">
-        <span className="font-medium" style={{ color }}>{label}</span>
-        <span className="tabular-nums text-muted">
+      <div className="mt-2.5 flex items-center justify-between gap-3">
+        <span className="text-[13px] font-medium" style={{ color }}>{label}</span>
+        <span className="text-[13px] tabular-nums text-muted">
           {over
             ? `${formatMoney(-left, currency)} over`
-            : `${formatMoney(left, currency)} left today`}
+            : `${formatMoney(left, currency)} left`}
         </span>
       </div>
 
-      {over && (
+      {over ? (
         <p
-          className="mt-4 rounded-xl px-4 py-3 text-sm"
+          className="mt-3.5 rounded-xl px-3.5 py-3 text-[13px] leading-relaxed"
           role="status"
           style={{
             background: 'color-mix(in srgb, var(--over) 12%, transparent)',
@@ -77,29 +75,22 @@ export default function GoalMeter({
             ? `No debt carries over — tomorrow starts fresh at ${formatMoney(baseCents, currency)}.`
             : 'Tomorrow starts fresh.'}
         </p>
-      )}
-
-      {rollover && !over && (
-        <div className="mt-4 rounded-xl bg-surface-2 px-4 py-3 text-sm">
-          <div className="flex items-center justify-between gap-3 tabular-nums">
-            <span className="text-muted">Today&apos;s goal</span>
-            <span className="font-medium">{formatMoney(baseCents, currency)}</span>
-          </div>
-          <div className="mt-1.5 flex items-center justify-between gap-3 tabular-nums">
-            <span className="text-muted">Saved up from before</span>
-            <span className="font-medium" style={{ color: 'var(--good)' }}>
-              +{formatMoney(carryInCents, currency)}
+      ) : (
+        rollover && (
+          <div className="mt-3.5 flex items-center justify-between gap-3 rounded-xl bg-surface-2 px-3.5 py-3 tabular-nums">
+            <span className="text-[13px] text-muted">
+              Goal {formatMoney(baseCents, currency)}
+              {carryInCents > 0 && (
+                <>
+                  {'  +  '}saved {formatMoney(carryInCents, currency)}
+                </>
+              )}
+            </span>
+            <span className="text-[13px] font-semibold">
+              {formatMoney(allowanceCents, currency)}
             </span>
           </div>
-          <div className="mt-2 flex items-center justify-between gap-3 border-t border-border pt-2 tabular-nums">
-            <span className="font-medium">Available today</span>
-            <span className="font-bold">{formatMoney(allowanceCents, currency)}</span>
-          </div>
-          <p className="mt-2 text-xs text-muted">
-            Whatever is left tonight ({formatMoney(left, currency)}) is added to
-            tomorrow&apos;s {formatMoney(baseCents, currency)}.
-          </p>
-        </div>
+        )
       )}
     </div>
   );

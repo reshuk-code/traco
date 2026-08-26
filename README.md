@@ -14,6 +14,7 @@ Built with Next.js 16 (App Router), Neon Postgres, and Neon Auth.
 - **Works offline** — install it, log expenses with no connection, and it syncs
   itself when you're back.
 - **Your day, not UTC** — day boundaries follow your own timezone.
+- **A shareable install page** at `/download`, with generated link previews.
 
 ## How the rollover works
 
@@ -106,6 +107,10 @@ generate a cookie secret:
 openssl rand -base64 32
 ```
 
+When you deploy, also set `NEXT_PUBLIC_SITE_URL` to the public URL. It backs
+`metadataBase`, which is what makes the Open Graph tags absolute — without it
+they point at `localhost` and link previews break when the site is shared.
+
 ### 4. Create the tables
 
 ```bash
@@ -124,6 +129,23 @@ npm run dev
 ```
 
 Open <http://localhost:3000>.
+
+## Installing and sharing
+
+`/download` is a public page (no sign-in) that walks people through installing
+the app. It detects the visitor's platform and shows only the steps that apply,
+offers a one-tap install where the browser supports it, and has a Share button
+that uses the Web Share API, falling back to copying the link.
+
+Link previews are generated at build time with `ImageResponse`:
+
+- `app/opengraph-image.js` — the site-wide preview
+- `app/download/opengraph-image.js` — a variant for the install page
+- `lib/og-template.js` — the artwork both share
+
+Note that a nested route declaring its own `openGraph` metadata replaces the
+parent's, so a route with custom OG metadata needs its own image file — which is
+why `/download` has one.
 
 ## Testing offline
 
@@ -151,10 +173,13 @@ app/
   api/auth/[...path]/ Neon Auth handler
   auth/               sign-in and sign-up
   components/         UI, including the offline-aware pieces
+  download/           public install page, platform-aware steps, OG image
   manifest.js         PWA manifest
   offline/            fallback page served by the service worker
+  opengraph-image.js  generated link preview
 lib/
   budget.js           rollover ledger maths (pure, no I/O)
+  og-template.js      shared Open Graph artwork
   data.js             queries and the session helper
   db.js               Neon client, plus outage-vs-bug error classification
   money.js            minor-unit parsing and formatting

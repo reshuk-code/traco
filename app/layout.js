@@ -14,7 +14,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const metadata = {
+  metadataBase: new URL(siteUrl),
   title: "traco — daily spending tracker",
   description:
     "Set a daily spending goal, log what you spend, and carry what you save into tomorrow.",
@@ -22,6 +25,21 @@ export const metadata = {
     capable: true,
     title: "traco",
     statusBarStyle: "black-translucent",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "traco",
+    title: "traco — daily spending tracker",
+    description:
+      "Set a daily spending goal, log what you spend, and carry what you save into tomorrow.",
+    url: "/",
+  },
+  twitter: {
+    // No twitter-image file, so X falls back to the generated OG image.
+    card: "summary_large_image",
+    title: "traco — daily spending tracker",
+    description:
+      "Set a daily spending goal, log what you spend, and carry what you save into tomorrow.",
   },
 };
 

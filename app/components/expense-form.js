@@ -1,10 +1,11 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 import { useOffline } from 'next/offline';
 import { addExpense } from '@/app/actions/expenses';
 import { addToOutbox, newId } from '@/lib/outbox';
-import { parseAmountToCents, CATEGORIES } from '@/lib/money';
+import { parseAmountToCents, CATEGORIES, currencySymbol } from '@/lib/money';
+import Spinner from './spinner';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -25,6 +26,8 @@ function buildEntry(formData, id, fallbackDate) {
 
 export default function ExpenseForm({ today, currency }) {
   const isOffline = useOffline();
+  const [category, setCategory] = useState('food');
+  const [showDetails, setShowDetails] = useState(false);
 
   const [state, formAction, isPending] = useActionState(async (prev, formData) => {
     // The id is minted here so the local copy and the eventual database row are
@@ -51,48 +54,87 @@ export default function ExpenseForm({ today, currency }) {
   }, null);
 
   return (
-    <form action={formAction} className="flex flex-col gap-4">
-      <div className="grid gap-3 sm:grid-cols-[1fr_9rem]">
-        <div>
-          <label className="label" htmlFor="amount">
-            How much did you spend? ({currency})
-          </label>
-          <input id="amount" name="amount" type="text" inputMode="decimal" required
-            autoComplete="off" placeholder="250"
-            className="field text-lg font-semibold tabular-nums" />
-        </div>
-        <div>
-          <label className="label" htmlFor="category">Category</label>
-          <select id="category" name="category" defaultValue="food" className="field capitalize">
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c} className="capitalize">{c}</option>
-            ))}
-          </select>
-        </div>
+    <form action={formAction}>
+      <input type="hidden" name="category" value={category} />
+
+      <label
+        htmlFor="amount"
+        className="flex items-center gap-2.5 rounded-[0.625rem] border border-border bg-surface-2 px-3.5 py-3 focus-within:border-brand"
+      >
+        <span className="text-[15px] font-semibold text-muted">{currencySymbol(currency)}</span>
+        <input
+          id="amount"
+          name="amount"
+          type="text"
+          inputMode="decimal"
+          required
+          autoComplete="off"
+          placeholder="0"
+          className="w-full bg-transparent text-2xl font-bold tracking-tight tabular-nums outline-none placeholder:text-muted/50"
+        />
+      </label>
+
+      {/* One row, swipeable — every category stays one tap away. */}
+      <div
+        role="radiogroup"
+        aria-label="Category"
+        className="-mx-1 mt-3 flex gap-2 overflow-x-auto px-1 pb-1"
+      >
+        {CATEGORIES.map((c) => {
+          const selected = c === category;
+          return (
+            <button
+              key={c}
+              type="button"
+              role="radio"
+              aria-checked={selected}
+              onClick={() => setCategory(c)}
+              className={`shrink-0 rounded-full px-3.5 py-2 text-[13px] capitalize transition-colors ${
+                selected
+                  ? 'bg-brand font-semibold text-brand-text'
+                  : 'border border-border bg-surface-2 font-medium text-muted hover:text-text'
+              }`}
+            >
+              {c}
+            </button>
+          );
+        })}
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-[1fr_11rem]">
-        <div>
-          <label className="label" htmlFor="note">Note (optional)</label>
-          <input id="note" name="note" type="text" maxLength={200}
-            placeholder="nasta, vada, indrive…" className="field" />
+      {showDetails && (
+        <div className="mt-3 flex flex-col gap-3">
+          <div>
+            <label className="label" htmlFor="note">Note</label>
+            <input id="note" name="note" type="text" maxLength={200}
+              placeholder="nasta, vada, indrive…" className="field" />
+          </div>
+          <div>
+            <label className="label" htmlFor="spent_on">Date</label>
+            <input id="spent_on" name="spent_on" type="date" defaultValue={today}
+              max={today} className="field" />
+          </div>
         </div>
-        <div>
-          <label className="label" htmlFor="spent_on">Date</label>
-          <input id="spent_on" name="spent_on" type="date" defaultValue={today}
-            max={today} className="field" />
-        </div>
-      </div>
+      )}
 
-      {state?.error && <p className="text-sm text-over" role="alert">{state.error}</p>}
+      {state?.error && (
+        <p className="mt-3 text-sm text-over" role="alert">{state.error}</p>
+      )}
       {state?.queuedLocal && (
-        <p className="text-sm text-warn" role="status">
+        <p className="mt-3 text-sm text-warn" role="status">
           Saved on this device. It will sync the moment you&apos;re back online.
         </p>
       )}
 
-      <button type="submit" disabled={isPending} className="btn btn-primary self-start">
-        {isPending ? 'Saving…' : isOffline ? 'Save offline' : 'Log expense'}
+      <button type="submit" disabled={isPending} className="btn btn-primary mt-3.5 w-full !py-3">
+        {isPending ? <Spinner size={18} label="Saving" /> : isOffline ? 'Save offline' : 'Add expense'}
+      </button>
+
+      <button
+        type="button"
+        onClick={() => setShowDetails((v) => !v)}
+        className="mt-2.5 w-full cursor-pointer text-center text-xs text-muted hover:text-text"
+      >
+        {showDetails ? 'Hide note and date' : 'Add a note or change the date'}
       </button>
     </form>
   );

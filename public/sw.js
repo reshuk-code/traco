@@ -1,11 +1,17 @@
 /* traco service worker — makes the app open with no network at all. */
 
-const VERSION = 'traco-v1';
+const VERSION = 'traco-v2';
 const SHELL = `${VERSION}-shell`;
 const PAGES = `${VERSION}-pages`;
 const ASSETS = `${VERSION}-assets`;
 
-const PRECACHE = ['/offline', '/icon-192.png', '/icon-512.png', '/manifest.webmanifest'];
+const PRECACHE = [
+  '/offline',
+  '/download',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/manifest.webmanifest',
+];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -69,7 +75,8 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
   if (url.pathname.startsWith('/api/')) return;
 
-  // Immutable build output.
+  // Immutable build output: production asset URLs are content-hashed, so
+  // cache-first is safe here. (Dev never registers this worker — see pwa.js.)
   if (url.pathname.startsWith('/_next/static/')) {
     event.respondWith(cacheFirst(request, ASSETS));
     return;

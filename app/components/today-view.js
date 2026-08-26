@@ -4,7 +4,6 @@ import GoalMeter from './goal-meter';
 import ExpenseForm from './expense-form';
 import ExpenseList from './expense-list';
 import { useOutbox } from './use-outbox';
-import { formatMoney } from '@/lib/money';
 
 /**
  * Today's numbers, with anything still sitting in the offline outbox folded in
@@ -20,7 +19,7 @@ export default function TodayView({ day, expenses, today, currency, rollover }) 
 
   return (
     <>
-      <section className="card p-5 sm:p-6">
+      <section className="card p-[18px]">
         <GoalMeter
           baseCents={day.base_cents}
           carryInCents={day.carryInCents}
@@ -31,25 +30,21 @@ export default function TodayView({ day, expenses, today, currency, rollover }) 
         />
       </section>
 
-      <section className="card p-5 sm:p-6">
-        <h2 className="mb-4 text-sm font-semibold">Log an expense</h2>
+      <section className="card p-[18px]">
+        <h2 className="mb-3 text-[13px] font-semibold">Log an expense</h2>
         <ExpenseForm today={today} currency={currency} />
       </section>
 
-      <section className="card p-5 sm:p-6">
-        <h2 className="text-sm font-semibold">
-          Today&apos;s entries
-          {entryCount > 0 && <span className="ml-2 font-normal text-muted">{entryCount}</span>}
-        </h2>
+      <section className="card p-[18px]">
+        <div className="flex items-baseline justify-between">
+          <h2 className="text-[13px] font-semibold">Today&apos;s entries</h2>
+          {entryCount > 0 && <span className="text-xs text-muted">{entryCount}</span>}
+        </div>
         <ExpenseList
           expenses={expenses}
           pending={pendingToday}
           currency={currency}
-          emptyText={
-            rollover
-              ? `Nothing logged yet — a quiet day adds ${formatMoney(day.allowanceCents, currency)} to tomorrow.`
-              : 'Nothing logged yet today.'
-          }
+          emptyText="Nothing logged yet today."
         />
       </section>
     </>

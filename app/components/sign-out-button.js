@@ -2,6 +2,7 @@
 
 import { useTransition } from 'react';
 import { signOut } from '@/app/auth/actions';
+import Spinner from './spinner';
 
 /**
  * Signing out also clears the offline copies of this account's pages, so the
@@ -31,9 +32,9 @@ export default function SignOutButton() {
       type="button"
       onClick={handleSignOut}
       disabled={isPending}
-      className="btn btn-ghost !px-3 !py-1.5 !text-sm"
+      className="shrink-0 cursor-pointer text-[13px] font-semibold text-over hover:underline disabled:opacity-60"
     >
-      {isPending ? 'Signing out…' : 'Sign out'}
+      {isPending ? <Spinner size={15} label="Signing out" /> : 'Sign out'}
     </button>
   );
 }

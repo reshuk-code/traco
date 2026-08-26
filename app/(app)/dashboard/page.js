@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import PageHeader from '@/app/components/page-header';
 import TodayView from '@/app/components/today-view';
 import OfflineNotice from '@/app/components/offline-notice';
 import WeekChart from '@/app/components/week-chart';
@@ -38,28 +40,40 @@ export default async function DashboardPage() {
   const currentDay = ledger.at(-1);
   const prettyDate = new Date(`${today}T00:00:00`).toLocaleDateString('en-US', {
     weekday: 'long',
-    month: 'long',
     day: 'numeric',
+    month: 'long',
   });
+  const initial = user.name.trim().charAt(0).toUpperCase() || '?';
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Hi {user.name.split(' ')[0]}</h1>
-        <p className="mt-1 text-sm text-muted">{prettyDate}</p>
-      </div>
-
-      <TodayView
-        day={currentDay}
-        expenses={todayExpenses}
-        today={today}
-        currency={settings.currency}
-        rollover={settings.rollover_enabled}
+    <>
+      <PageHeader
+        title="Today"
+        subtitle={prettyDate}
+        action={
+          <Link
+            href="/settings"
+            aria-label="Your account"
+            className="flex size-[34px] items-center justify-center rounded-full border border-border bg-surface-2 text-[13px] font-semibold text-muted hover:text-text"
+          >
+            {initial}
+          </Link>
+        }
       />
 
-      <section className="card p-5 sm:p-6">
-        <WeekChart days={ledger.slice(-7)} currency={settings.currency} />
-      </section>
-    </div>
+      <div className="mx-auto flex max-w-2xl flex-col gap-3.5 px-5 py-4">
+        <TodayView
+          day={currentDay}
+          expenses={todayExpenses}
+          today={today}
+          currency={settings.currency}
+          rollover={settings.rollover_enabled}
+        />
+
+        <section className="card p-[18px]">
+          <WeekChart days={ledger.slice(-7)} currency={settings.currency} />
+        </section>
+      </div>
+    </>
   );
 }

@@ -1,16 +1,22 @@
-import SiteHeader from '@/app/components/site-header';
+import BottomNav from '@/app/components/bottom-nav';
 import { requireUser } from '@/lib/data';
 
 // Every screen in here reads the session, so none of it can be prerendered.
 export const dynamic = 'force-dynamic';
 
 export default async function AppLayout({ children }) {
-  const user = await requireUser();
+  await requireUser();
 
   return (
     <>
-      <SiteHeader user={user} />
-      <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-6 sm:py-8">{children}</main>
+      {/* Bottom padding clears the fixed tab bar plus the home indicator. */}
+      <div
+        className="flex-1"
+        style={{ paddingBottom: 'calc(5.25rem + env(safe-area-inset-bottom))' }}
+      >
+        {children}
+      </div>
+      <BottomNav />
     </>
   );
 }
