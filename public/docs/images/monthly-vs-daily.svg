@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 380" width="980" height="380" role="img" aria-label="A monthly budget versus a daily budget">
+  <rect width="980" height="380" fill="#0b0e13"/>
+  <g font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+    <text x="40" y="46" fill="#8d97a6" font-size="15" letter-spacing="2">ONE MONTHLY NUMBER</text>
+    <text x="40" y="96" fill="#e8ecf2" font-size="20" font-weight="600">Rs 6,000 for the month</text>
+    <rect x="40" y="120" width="400" height="44" rx="10" fill="#232b38"/>
+    <rect x="40" y="120" width="268" height="44" rx="10" fill="#f87171"/>
+    <path d="M308 168 L308 196" stroke="#f87171" stroke-width="2"/>
+    <text x="40" y="222" fill="#f87171" font-size="15" font-weight="600">Day 19: it&#8217;s gone. Eleven days to go.</text>
+    <text x="40" y="256" fill="#8d97a6" font-size="15">A month is too long to feel. You find out you</text>
+    <text x="40" y="278" fill="#8d97a6" font-size="15">overspent long after you could have done</text>
+    <text x="40" y="300" fill="#8d97a6" font-size="15">anything about it.</text>
+
+    <line x1="490" y1="40" x2="490" y2="340" stroke="#262e3b"/>
+
+    <text x="540" y="46" fill="#8d97a6" font-size="15" letter-spacing="2">THIRTY SMALL ONES</text>
+    <text x="540" y="96" fill="#e8ecf2" font-size="20" font-weight="600">Rs 200 today</text>
+    <rect x="540" y="142" width="9" height="22" rx="3" fill="#34d399"/>
+    <rect x="554" y="134" width="9" height="30" rx="3" fill="#34d399"/>
+    <rect x="568" y="146" width="9" height="18" rx="3" fill="#34d399"/>
+    <rect x="582" y="124" width="9" height="40" rx="3" fill="#34d399"/>
+    <rect x="596" y="138" width="9" height="26" rx="3" fill="#34d399"/>
+    <rect x="610" y="120" width="9" height="44" rx="3" fill="#f87171"/>
+    <rect x="624" y="152" width="9" height="12" rx="3" fill="#34d399"/>
+    <rect x="638" y="130" width="9" height="34" rx="3" fill="#34d399"/>
+    <rect x="652" y="144" width="9" height="20" rx="3" fill="#34d399"/>
+    <rect x="666" y="112" width="9" height="52" rx="3" fill="#f87171"/>
+    <rect x="680" y="148" width="9" height="16" rx="3" fill="#34d399"/>
+    <rect x="694" y="136" width="9" height="28" rx="3" fill="#34d399"/>
+    <rect x="708" y="126" width="9" height="38" rx="3" fill="#34d399"/>
+    <rect x="722" y="140" width="9" height="24" rx="3" fill="#34d399"/>
+    <rect x="736" y="118" width="9" height="46" rx="3" fill="#f87171"/>
+    <rect x="750" y="150" width="9" height="14" rx="3" fill="#34d399"/>
+    <rect x="764" y="132" width="9" height="32" rx="3" fill="#34d399"/>
+    <rect x="778" y="142" width="9" height="22" rx="3" fill="#34d399"/>
+    <rect x="792" y="122" width="9" height="42" rx="3" fill="#34d399"/>
+    <rect x="806" y="146" width="9" height="18" rx="3" fill="#34d399"/>
+    <rect x="820" y="134" width="9" height="30" rx="3" fill="#34d399"/>
+    <rect x="834" y="114" width="9" height="50" rx="3" fill="#f87171"/>
+    <rect x="848" y="144" width="9" height="20" rx="3" fill="#34d399"/>
+    <rect x="862" y="128" width="9" height="36" rx="3" fill="#34d399"/>
+    <rect x="876" y="138" width="9" height="26" rx="3" fill="#34d399"/>
+    <rect x="890" y="148" width="9" height="16" rx="3" fill="#34d399"/>
+    <rect x="904" y="120" width="9" height="44" rx="3" fill="#f87171"/>
+    <rect x="918" y="140" width="9" height="24" rx="3" fill="#34d399"/>
+    <rect x="932" y="130" width="9" height="34" rx="3" fill="#34d399"/>
+    <rect x="946" y="144" width="9" height="20" rx="3" fill="#34d399"/>
+    <line x1="540" y1="168" x2="946" y2="168" stroke="#262e3b" stroke-width="2"/>
+    <text x="540" y="190" fill="#646d7a" font-size="13">day 1</text>
+    <text x="946" y="190" fill="#646d7a" font-size="13" text-anchor="end">day 30</text>
+    <text x="540" y="222" fill="#34d399" font-size="15" font-weight="600">You know by 8pm, every day.</text>
+    <text x="540" y="256" fill="#8d97a6" font-size="15">A day is short enough to picture and short</text>
+    <text x="540" y="278" fill="#8d97a6" font-size="15">enough to fix. Tomorrow is always a new</text>
+    <text x="540" y="300" fill="#8d97a6" font-size="15">chance to get it right.</text>
+  </g>
+</svg>

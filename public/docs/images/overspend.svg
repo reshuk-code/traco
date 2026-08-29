@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" width="960" height="430" role="img" aria-label="Overspending does not carry: the next day starts fresh at its goal">
+  <rect width="960" height="430" fill="#0b0e13"/>
+  <g font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+    <text x="40" y="48" fill="#e8ecf2" font-size="24" font-weight="700">A bad day stays in its own day</text>
+    <text x="40" y="76" fill="#8d97a6" font-size="15">Overspending is shown, then the slate is wiped &#8212; the saved-up balance never goes negative</text>
+
+    <line x1="40" y1="330" x2="920" y2="330" stroke="#262e3b" stroke-width="2"/>
+
+    <!-- Day 1: available 200, spent 300 -->
+    <g>
+      <rect x="150" y="230" width="150" height="100" rx="6" fill="none" stroke="#8d97a6" stroke-dasharray="5 5"/>
+      <rect x="170" y="180" width="110" height="150" rx="6" fill="#f87171"/>
+      <text x="225" y="166" fill="#f87171" font-size="16" font-weight="600" text-anchor="middle">spent 300</text>
+      <text x="320" y="290" fill="#8d97a6" font-size="14">available 200</text>
+      <path d="M310 180 L340 180 M310 230 L340 230 M325 180 L325 230" stroke="#f87171" stroke-width="2" fill="none"/>
+      <text x="350" y="210" fill="#f87171" font-size="15" font-weight="600">&#8722;100 over today</text>
+      <text x="225" y="356" fill="#8d97a6" font-size="15" text-anchor="middle">Day 1</text>
+    </g>
+
+    <!-- crossed-out carry arrow -->
+    <g transform="translate(430,262)">
+      <path d="M0 0 L120 0" stroke="#646d7a" stroke-width="2" stroke-dasharray="6 6"/>
+      <path d="M112 -6 L124 0 L112 6" fill="none" stroke="#646d7a" stroke-width="2"/>
+      <path d="M48 -14 L72 14 M72 -14 L48 14" stroke="#f87171" stroke-width="3"/>
+      <text x="60" y="40" fill="#f87171" font-size="14" text-anchor="middle">no debt carries</text>
+    </g>
+
+    <!-- Day 2: fresh 200 -->
+    <g>
+      <rect x="620" y="230" width="150" height="100" rx="6" fill="#34d399" fill-opacity="0.22" stroke="#34d399"/>
+      <text x="695" y="216" fill="#34d399" font-size="16" font-weight="600" text-anchor="middle">Available 200</text>
+      <text x="695" y="286" fill="#34d399" font-size="15" text-anchor="middle">fresh start</text>
+      <text x="695" y="356" fill="#8d97a6" font-size="15" text-anchor="middle">Day 2</text>
+    </g>
+
+    <text x="40" y="404" fill="#646d7a" font-size="14">One overspent Friday can&#8217;t bury the next three weeks &#8212; which is the difference between an app you keep using and one you delete.</text>
+  </g>
+</svg>

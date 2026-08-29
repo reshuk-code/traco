@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" width="960" height="470" role="img" aria-label="Rollover: unspent money is added to the next day's budget">
+  <rect width="960" height="470" fill="#0b0e13"/>
+  <g font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+    <text x="40" y="48" fill="#e8ecf2" font-size="24" font-weight="700">Rollover: what you don&#8217;t spend, you keep</text>
+    <text x="40" y="76" fill="#8d97a6" font-size="15">Goal Rs 200 a day &#183; you spend Rs 50 a day</text>
+
+    <g transform="translate(600,36)">
+      <rect x="0" y="0" width="14" height="14" rx="4" fill="#34d399"/>
+      <text x="24" y="12" fill="#8d97a6" font-size="14">left over (carries)</text>
+      <rect x="0" y="24" width="14" height="14" rx="4" fill="#6366f1"/>
+      <text x="24" y="36" fill="#8d97a6" font-size="14">spent</text>
+    </g>
+
+    <line x1="40" y1="380" x2="920" y2="380" stroke="#262e3b" stroke-width="2"/>
+
+    <!-- Day 1: available 200, spent 50, 150 carries -->
+    <g>
+      <rect x="120" y="280" width="140" height="75" rx="6" fill="#34d399" fill-opacity="0.22" stroke="#34d399"/>
+      <rect x="120" y="355" width="140" height="25" rx="6" fill="#6366f1"/>
+      <text x="190" y="268" fill="#e8ecf2" font-size="16" font-weight="600" text-anchor="middle">Available 200</text>
+      <text x="190" y="324" fill="#34d399" font-size="15" font-weight="600" text-anchor="middle">150 left</text>
+      <text x="190" y="404" fill="#8d97a6" font-size="15" text-anchor="middle">Day 1</text>
+      <text x="190" y="426" fill="#646d7a" font-size="13" text-anchor="middle">spent 50</text>
+    </g>
+
+    <!-- Day 2: available 350 -->
+    <g>
+      <rect x="390" y="205" width="140" height="150" rx="6" fill="#34d399" fill-opacity="0.22" stroke="#34d399"/>
+      <rect x="390" y="355" width="140" height="25" rx="6" fill="#6366f1"/>
+      <text x="460" y="193" fill="#e8ecf2" font-size="16" font-weight="600" text-anchor="middle">Available 350</text>
+      <text x="460" y="286" fill="#34d399" font-size="15" font-weight="600" text-anchor="middle">300 left</text>
+      <text x="460" y="404" fill="#8d97a6" font-size="15" text-anchor="middle">Day 2</text>
+      <text x="460" y="426" fill="#646d7a" font-size="13" text-anchor="middle">spent 50</text>
+    </g>
+
+    <!-- Day 3: available 500 -->
+    <g>
+      <rect x="660" y="130" width="140" height="225" rx="6" fill="#34d399" fill-opacity="0.22" stroke="#34d399"/>
+      <rect x="660" y="355" width="140" height="25" rx="6" fill="#6366f1"/>
+      <text x="730" y="118" fill="#e8ecf2" font-size="16" font-weight="600" text-anchor="middle">Available 500</text>
+      <text x="730" y="248" fill="#34d399" font-size="15" font-weight="600" text-anchor="middle">450 left</text>
+      <text x="730" y="404" fill="#8d97a6" font-size="15" text-anchor="middle">Day 3</text>
+      <text x="730" y="426" fill="#646d7a" font-size="13" text-anchor="middle">spent 50</text>
+    </g>
+
+    <defs>
+      <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+        <path d="M0,0 L10,5 L0,10 z" fill="#34d399"/>
+      </marker>
+    </defs>
+    <path d="M268 320 C 310 320, 348 300, 382 292" stroke="#34d399" stroke-width="2" fill="none" marker-end="url(#arw)"/>
+    <text x="325" y="342" fill="#34d399" font-size="14" text-anchor="middle">+150</text>
+    <path d="M538 286 C 580 286, 618 262, 652 252" stroke="#34d399" stroke-width="2" fill="none" marker-end="url(#arw)"/>
+    <text x="595" y="308" fill="#34d399" font-size="14" text-anchor="middle">+300</text>
+
+    <text x="40" y="456" fill="#646d7a" font-size="14">Every quiet day makes the next one roomier &#8212; saving pays you back the next morning, not next year.</text>
+  </g>
+</svg>
