@@ -116,9 +116,13 @@ public class TracoWidgetProvider extends AppWidgetProvider {
             views.setProgressBar(R.id.widget_progress, 100, json.getInt("usedPct"), false);
             views.setTextViewText(R.id.widget_challenge, display.optString("challenge", ""));
         } catch (Exception e) {
-            // Say so rather than going blank; whatever is already on screen beats
-            // nothing until the next tap.
-            views.setTextViewText(R.id.widget_sub, "Couldn't refresh - tap to retry");
+            // Name the reason. A bare "could not refresh" hides the difference
+            // between a rejected token and no network at all, and that difference
+            // is the whole diagnosis.
+            String reason = (e instanceof IllegalStateException && e.getMessage() != null)
+                    ? e.getMessage()
+                    : "no connection";
+            views.setTextViewText(R.id.widget_sub, "Couldn't refresh - " + reason);
         }
 
         manager.updateAppWidget(widgetId, views);

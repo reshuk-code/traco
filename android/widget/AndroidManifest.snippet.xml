@@ -5,6 +5,10 @@
   Everything else in that file is Bubblewrap's and should be left alone.
 -->
 
+<!-- Sibling of <application>, not inside it. The widget fetches directly from
+     this process, so it needs INTERNET; the TWA alone does not. -->
+<uses-permission android:name="android.permission.INTERNET" />
+
 <receiver
     android:name=".widget.TracoWidgetProvider"
     android:exported="false">

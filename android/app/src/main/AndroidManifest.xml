@@ -32,6 +32,17 @@
 
     
 
+
+    <!--
+      The TWA itself does not need this: its web content is rendered by the
+      browser process. The home-screen widget does, because it calls the traco
+      API directly from this process. Without it every fetch fails silently and
+      the widget just says it could not refresh.
+
+      Bubblewrap does not add this, and may drop it if it regenerates the
+      manifest — re-add it after any `bubblewrap update`.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name="Application"
         android:allowBackup="true"
