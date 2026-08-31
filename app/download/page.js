@@ -2,6 +2,7 @@ import Link from 'next/link';
 import InstallCta from './install-cta';
 import InstallSteps from './install-steps';
 import AppPreview from './app-preview';
+import AndroidApk from './android-apk';
 
 export const metadata = {
   title: 'Get traco — install the app',
@@ -70,6 +71,10 @@ export default function DownloadPage() {
 
         <div className="mt-14">
           <InstallSteps />
+        </div>
+
+        <div className="mt-6">
+          <AndroidApk />
         </div>
 
         <section className="mt-12 rounded-2xl bg-surface-2 px-6 py-8 text-center">

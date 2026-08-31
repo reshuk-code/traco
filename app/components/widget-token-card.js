@@ -45,6 +45,13 @@ export default function WidgetTokenCard({ tokens, siteUrl }) {
         your password. The token is read-only — it can show today&apos;s numbers
         and nothing else.
       </p>
+      <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
+        Need the widget itself?{' '}
+        <a href="/download" className="font-semibold text-brand hover:underline">
+          Download the Android app
+        </a>
+        {' '}— a home-screen widget needs the installed app, not the web version.
+      </p>
 
       {state?.token && (
         <div
