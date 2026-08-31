@@ -83,7 +83,7 @@ export default function InstallCta() {
   if (installed) {
     return (
       <div
-        className="flex items-center gap-3 rounded-2xl px-5 py-4"
+        className="flex items-center gap-3 rounded-card px-5 py-4"
         style={{ background: 'color-mix(in srgb, var(--good) 12%, transparent)' }}
       >
         <span className="text-xl" aria-hidden="true">

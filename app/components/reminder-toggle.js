@@ -107,11 +107,10 @@ export default function ReminderToggle({ reminderHour, publicKey, timezone }) {
   const on = subscribed && reminderHour !== null;
 
   return (
-    <section className="card p-[18px]">
+    <div>
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h2 className="text-[15px] font-semibold">Daily reminder</h2>
-          <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
+          <p className="text-[13px] leading-relaxed text-muted">
             A notification once a day with what&apos;s left and how your challenge is
             going — so you don&apos;t have to open the app to find out.
           </p>
@@ -135,7 +134,7 @@ export default function ReminderToggle({ reminderHour, publicKey, timezone }) {
 
       {supported && permission !== 'denied' && (
         <>
-          <div className="mt-3.5 flex items-center justify-between gap-3 rounded-xl bg-surface-2 px-3.5 py-3">
+          <div className="mt-3.5 flex items-center justify-between gap-3 rounded-inner bg-surface-2 px-3.5 py-3">
             <label className="text-[13px] text-muted" htmlFor="reminder_hour">
               Send it at
             </label>
@@ -182,6 +181,6 @@ export default function ReminderToggle({ reminderHour, publicKey, timezone }) {
           On — next reminder at {hourLabel(hour)}.
         </p>
       )}
-    </section>
+    </div>
   );
 }

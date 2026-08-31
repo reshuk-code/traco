@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto';
 import { refresh } from 'next/cache';
 import { sql, isConnectivityError } from '@/lib/db';
 import { requireUser, getSettings, getToday } from '@/lib/data';
-import { parseAmountToCents, CATEGORIES } from '@/lib/money';
+import { parseAmountToCents, CATEGORIES, MAX_AMOUNT } from '@/lib/money';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -14,7 +14,9 @@ export async function addExpense(_prevState, formData) {
   // a dead connection still produces a well-formed entry to queue.
   const amountCents = parseAmountToCents(String(formData.get('amount') ?? ''));
   if (amountCents === null || amountCents === 0) {
-    return { error: 'Enter how much you spent, like 250 or 99.50.' };
+    return {
+      error: `Enter how much you spent, like 250 or 99.50 (up to ${MAX_AMOUNT.toLocaleString('en-US')}).`,
+    };
   }
 
   const category = String(formData.get('category') ?? 'other');

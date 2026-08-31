@@ -137,7 +137,21 @@ public class TracoWidgetProvider extends AppWidgetProvider {
             connection.setConnectTimeout(TIMEOUT_MS);
             connection.setReadTimeout(TIMEOUT_MS);
 
-            int status = connection.getResponseCode();
+            // Android's HttpURLConnection throws instead of returning the code
+            // when a 401 carries a challenge it cannot answer. Asking twice
+            // returns the real status; without this a rejected token looks
+            // exactly like having no network at all.
+            int status;
+            try {
+                status = connection.getResponseCode();
+            } catch (java.io.IOException challenge) {
+                try {
+                    status = connection.getResponseCode();
+                } catch (java.io.IOException again) {
+                    throw new IllegalStateException("token rejected");
+                }
+            }
+
             if (status != 200) {
                 throw new IllegalStateException("HTTP " + status);
             }

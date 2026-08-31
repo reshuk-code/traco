@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif; }
+    a { color: #6366f1; text-decoration: underline; } a:hover { color: #818cf8; }
+    .num { font-variant-numeric: tabular-nums; }
+  </style>
+</helmet>
+
+<div style="width: 390px; height: 844px; background: #0b0e13; color: #e8ecf2; position: relative; overflow: hidden;">
+
+  <!-- The app underneath, dimmed. Showing it matters: this is a returning user
+       who has data here, and the sheet should read as one step in front of
+       their own screen, not a wall that lost it. -->
+  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; filter: blur(1.5px);">
+    <div style="border-bottom: 1px solid #262e3b; display: flex; align-items: center; gap: 12px; padding: 16px 20px;">
+      <div style="flex: 1 1 0;">
+        <div style="font-size: 19px; font-weight: 700; letter-spacing: -0.02em;">Today</div>
+        <div style="margin-top: 2px; font-size: 12px; color: #8d97a6;">Monday, 31 August</div>
+      </div>
+      <div style="width: 34px; height: 34px; border-radius: 999px; border: 1px solid #262e3b; background: #1b212c; color: #8d97a6; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600;">R</div>
+    </div>
+    <div style="padding: 16px 20px; display: flex; flex-direction: column; gap: 14px;">
+      <div style="background: #141922; border: 1px solid #262e3b; border-radius: 16px; padding: 18px;">
+        <div style="font-size: 12px; color: #8d97a6;">Spent today</div>
+        <div class="num" style="margin-top: 4px; font-size: 36px; font-weight: 700; line-height: 1; letter-spacing: -0.03em;">NPR&nbsp;275</div>
+        <div style="margin-top: 14px; height: 8px; width: 100%; border-radius: 999px; background: #232b38; overflow: hidden;">
+          <div style="height: 100%; width: 100%; border-radius: 999px; background: #f87171;"></div>
+        </div>
+      </div>
+      <div style="background: #141922; border: 1px solid #262e3b; border-radius: 16px; height: 150px;"></div>
+    </div>
+  </div>
+
+  <div style="position: absolute; inset: 0; background: rgba(4, 6, 10, 0.72);"></div>
+
+  <div style="position: absolute; left: 0; right: 0; bottom: 0; background: #141922; border-top: 1px solid #262e3b; border-radius: 24px 24px 0 0; padding: 26px 24px 30px;">
+
+    <div style="width: 36px; height: 4px; border-radius: 999px; background: #2f3846; margin: 0 auto 20px;"></div>
+
+    <div style="font-size: 22px; font-weight: 700; letter-spacing: -0.02em;">Before you carry on</div>
+    <div style="margin-top: 10px; font-size: 15px; line-height: 1.6; color: #8d97a6;">
+      We&rsquo;ve published traco&rsquo;s Terms &amp; Conditions and Privacy Policy. Have a read and accept them to keep using the app.
+    </div>
+
+    <div style="margin-top: 18px; display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; align-items: center; gap: 12px; border-radius: 12px; border: 1px solid #262e3b; background: #1b212c; padding: 14px 16px; cursor: pointer;">
+        <div style="flex: 1 1 0; font-size: 15px; font-weight: 500;">Terms &amp; Conditions</div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5c6675" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; border-radius: 12px; border: 1px solid #262e3b; background: #1b212c; padding: 14px 16px; cursor: pointer;">
+        <div style="flex: 1 1 0; font-size: 15px; font-weight: 500;">Privacy Policy</div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5c6675" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+      </div>
+    </div>
+
+    <div onClick="{{ toggle }}" style="margin-top: 18px; display: flex; align-items: flex-start; gap: 11px; cursor: pointer;">
+      <div style="flex: 0 0 auto; margin-top: 1px; width: 22px; height: 22px; border-radius: 7px; border: 1.5px solid {{ boxBorder }}; background: {{ boxBg }}; display: flex; align-items: center; justify-content: center;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="{{ tick }}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+      </div>
+      <div style="flex: 1 1 0; font-size: 13px; line-height: 1.55; color: #8d97a6;">I&rsquo;ve read and agree to both.</div>
+    </div>
+
+    <div style="margin-top: 16px; display: flex; align-items: center; justify-content: center; border-radius: 10px; padding: 14px 16px; font-size: 15px; font-weight: 600; background: {{ btnBg }}; color: {{ btnFg }};">Accept and continue</div>
+
+    <!-- No dismiss and no "later": consent that can be swiped away is not
+         recorded consent. Signing out is the honest way out, so it stays. -->
+    <div style="margin-top: 14px; text-align: center; font-size: 13px; color: #8d97a6;">
+      Not happy with this? <a href="#">Sign out</a>
+    </div>
+
+  </div>
+
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { agreed: false };
+  }
+
+  renderVals() {
+    var self = this;
+    var on = this.state.agreed;
+    return {
+      toggle: function () { self.setState({ agreed: !self.state.agreed }); },
+      boxBorder: on ? '#6366f1' : '#39424f',
+      boxBg: on ? '#6366f1' : 'transparent',
+      tick: on ? '#ffffff' : 'transparent',
+      btnBg: on ? '#6366f1' : '#20252f',
+      btnFg: on ? '#ffffff' : '#5c6675'
+    };
+  }
+}
+</script>
+</body>
+</html>

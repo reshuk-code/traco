@@ -40,7 +40,8 @@ export async function GET(request) {
 
   const rows = await sql`
     select t.id as token_id, t.user_id,
-           s.daily_goal_cents, s.currency, s.timezone, s.rollover_enabled
+           s.daily_goal_cents::float8 as daily_goal_cents, s.currency,
+           s.timezone, s.rollover_enabled
     from public.widget_tokens t
     join public.user_settings s on s.user_id = t.user_id
     where t.token_hash = ${hashWidgetToken(token)}
@@ -85,10 +86,14 @@ export async function GET(request) {
     }
   }
 
-  // Best-effort: a failed touch must never cost the caller its data.
-  sql`update public.widget_tokens set last_used_at = now() where id = ${account.token_id}`.catch(
-    () => {},
-  );
+  // Awaited, not fire-and-forget: an un-awaited promise can be cut off when the
+  // function returns, which made a working widget read as "never used" and sent
+  // debugging down the wrong path entirely.
+  try {
+    await sql`update public.widget_tokens set last_used_at = now() where id = ${account.token_id}`;
+  } catch {
+    // A failed touch must never cost the caller its data.
+  }
 
   return Response.json(
     {

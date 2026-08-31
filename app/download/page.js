@@ -77,7 +77,7 @@ export default function DownloadPage() {
           <AndroidApk />
         </div>
 
-        <section className="mt-12 rounded-2xl bg-surface-2 px-6 py-8 text-center">
+        <section className="mt-12 rounded-card bg-surface-2 px-6 py-8 text-center">
           <h2 className="text-xl font-bold tracking-tight">Start with today</h2>
           <p className="mx-auto mt-2 max-w-sm text-sm text-muted">
             Make an account, pick a daily goal, and log your first expense in

@@ -188,7 +188,7 @@ export default function ChallengeForm({ days, goalCents, currency, today, earlie
                 type="button"
                 onClick={() => pickPreset(p.id)}
                 aria-pressed={selected}
-                className={`flex cursor-pointer items-center justify-between gap-3 rounded-xl border bg-surface-2 px-3.5 py-3 text-left transition-colors ${
+                className={`flex cursor-pointer items-center justify-between gap-3 rounded-inner border bg-surface-2 px-3.5 py-3 text-left transition-colors ${
                   selected ? 'border-brand' : 'border-border hover:border-muted'
                 }`}
               >
@@ -217,7 +217,7 @@ export default function ChallengeForm({ days, goalCents, currency, today, earlie
         <label className="text-xs text-muted" htmlFor="cap">
           Daily cap
         </label>
-        <div className="mt-2.5 flex items-center gap-2.5 rounded-[0.625rem] border border-border bg-surface-2 px-3.5 py-3 focus-within:border-brand">
+        <div className="mt-2.5 flex items-center gap-2.5 rounded-field border border-border bg-surface-2 px-3.5 py-3 focus-within:border-brand">
           <span className="text-[15px] font-semibold text-muted">
             {currencySymbol(currency)}
           </span>

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "themes": "node scripts/build-themes.mjs && node scripts/check-themes.mjs"
   },
   "dependencies": {
     "@neondatabase/auth": "^0.5.0-beta",

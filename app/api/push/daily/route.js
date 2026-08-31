@@ -44,7 +44,7 @@ export async function GET(request) {
 
   // Due = the user's own clock has reached the hour they chose.
   const candidates = await sql`
-    select u.user_id, u.daily_goal_cents, u.currency, u.timezone,
+    select u.user_id, u.daily_goal_cents::float8 as daily_goal_cents, u.currency, u.timezone,
            u.rollover_enabled, u.reminder_hour
     from public.user_settings u
     where u.reminder_hour is not null

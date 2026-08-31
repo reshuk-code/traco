@@ -33,7 +33,7 @@ export default function OfflineNotice({ today: serverToday, currency }) {
   return (
     <div className="flex flex-col gap-6">
       <section
-        className="rounded-2xl px-5 py-4 text-sm"
+        className="rounded-card px-5 py-4 text-sm"
         style={{
           background: 'color-mix(in srgb, var(--warn) 12%, transparent)',
           color: 'var(--warn)',

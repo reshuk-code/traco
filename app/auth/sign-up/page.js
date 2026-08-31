@@ -51,7 +51,7 @@ export default function SignUpPage() {
             </select>
           </div>
 
-          <div className="mt-2.5 flex items-center gap-2.5 rounded-[0.625rem] border border-brand bg-surface-2 px-3.5 py-3">
+          <div className="mt-2.5 flex items-center gap-2.5 rounded-field border border-brand bg-surface-2 px-3.5 py-3">
             <span className="text-[15px] font-semibold text-muted">
               {currencySymbol(currency)}
             </span>
@@ -106,7 +106,29 @@ export default function SignUpPage() {
           <p className="mt-3 text-sm text-over" role="alert">{state.error}</p>
         )}
 
-        <button type="submit" disabled={isPending} className="btn btn-primary mt-5 !py-3.5">
+        {/* Never pre-ticked, and sitting directly above the button that acts
+            on it: a box you did not tick is not consent. */}
+        <label className="mt-4 flex cursor-pointer items-start gap-3">
+          <input
+            name="accept_terms"
+            type="checkbox"
+            required
+            className="mt-0.5 size-[22px] shrink-0 cursor-pointer accent-[var(--brand)]"
+          />
+          <span className="text-[13px] leading-relaxed text-muted">
+            I agree to traco&rsquo;s{' '}
+            <Link href="/terms" className="font-medium text-brand hover:underline">
+              Terms &amp; Conditions
+            </Link>{' '}
+            and{' '}
+            <Link href="/privacy" className="font-medium text-brand hover:underline">
+              Privacy Policy
+            </Link>
+            .
+          </span>
+        </label>
+
+        <button type="submit" disabled={isPending} className="btn btn-primary mt-4 !py-3.5">
           {isPending ? <Spinner size={18} label="Creating account" /> : 'Create account'}
         </button>
 

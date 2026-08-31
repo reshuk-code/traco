@@ -122,3 +122,43 @@ create table if not exists public.widget_tokens (
 
 create index if not exists widget_tokens_user_idx
   on public.widget_tokens (user_id, created_at desc);
+
+-- Appearance. `theme` picks the palette and geometry; `theme_mode` decides
+-- whether light/dark follows the phone or is pinned. Both are rendered onto
+-- <html> before first paint, so a stale value here means a wrong-looking app
+-- rather than a broken one — hence the check constraints.
+alter table public.user_settings
+  add column if not exists theme text not null default 'default'
+    check (theme in ('default', 'ink', 'void', 'neon', 'bloom'));
+
+alter table public.user_settings
+  add column if not exists theme_mode text not null default 'system'
+    check (theme_mode in ('system', 'light', 'dark'));
+
+-- Which version of the terms this account accepted, and when.
+--
+-- A boolean would be useless the first time the terms change: there would be no
+-- way to tell who agreed to what, and no way to re-ask. Storing the version
+-- makes both possible, and makes the record provable.
+alter table public.user_settings
+  add column if not exists terms_version text;
+
+alter table public.user_settings
+  add column if not exists terms_accepted_at timestamptz;
+
+-- Money columns are bigint, not integer.
+--
+-- integer caps at 2,147,483,647 cents — about 21.4 million in currency units.
+-- A single large entry blows past that, and so does a busy account's running
+-- total: `sum(amount_cents)::int` raises 22003 the moment the sum exceeds the
+-- ceiling, which would break the dashboard for reasons a user cannot see.
+--
+-- Reads cast to float8 rather than being returned raw: the driver hands back
+-- bigint as a STRING, which would turn every total into string concatenation.
+-- float8 is exact for integers below 2^53 — around 90 trillion cents — so no
+-- precision is lost at any amount this app will ever hold.
+alter table public.expenses      alter column amount_cents      type bigint;
+alter table public.user_settings alter column daily_goal_cents  type bigint;
+alter table public.goal_history  alter column daily_goal_cents  type bigint;
+alter table public.challenges    alter column cap_cents         type bigint;
+alter table public.challenges    alter column target_cents      type bigint;

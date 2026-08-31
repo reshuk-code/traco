@@ -58,7 +58,7 @@ export default function InstallSteps() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-lg font-bold tracking-tight">How to install</h2>
         {/* Full-width segmented control on mobile so each tab is a real target. */}
-        <div className="grid grid-cols-3 gap-1 rounded-xl bg-surface-2 p-1 sm:flex">
+        <div className="grid grid-cols-3 gap-1 rounded-inner bg-surface-2 p-1 sm:flex">
           {PLATFORMS.map((p) => {
             const isActive = p.id === activeId;
             return (
@@ -69,8 +69,8 @@ export default function InstallSteps() {
                 aria-pressed={isActive}
                 className={
                   isActive
-                    ? 'rounded-lg bg-surface px-3 py-2 text-sm font-medium text-text sm:py-1.5'
-                    : 'rounded-lg px-3 py-2 text-sm font-medium text-muted hover:text-text sm:py-1.5'
+                    ? 'rounded-field bg-surface px-3 py-2 text-sm font-medium text-text sm:py-1.5'
+                    : 'rounded-field px-3 py-2 text-sm font-medium text-muted hover:text-text sm:py-1.5'
                 }
               >
                 {p.label}

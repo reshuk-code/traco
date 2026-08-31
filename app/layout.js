@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Pwa from "./components/pwa";
+import ThemeScript from "./components/theme-script";
 import OfflineBanner from "./components/offline-banner";
 import OutboxSync from "./components/outbox-sync";
 
@@ -70,6 +71,9 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col font-sans">
+        {/* First in the body, and synchronous: the first paint is already the
+            right theme rather than a default that swaps a frame later. */}
+        <ThemeScript />
         {/*
           These live at the root, not in the authenticated layout, so that the
           offline notice and the pending-entry sync keep working even when a

@@ -31,7 +31,7 @@ export default function SignInForm({ justReset = false }) {
 
         {justReset && (
           <p
-            className="mt-5 rounded-xl px-3.5 py-3 text-[13px]"
+            className="mt-5 rounded-inner px-3.5 py-3 text-[13px]"
             role="status"
             style={{
               background: 'color-mix(in srgb, var(--good) 12%, transparent)',

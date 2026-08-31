@@ -38,9 +38,8 @@ export default function WidgetTokenCard({ tokens, siteUrl }) {
     : null;
 
   return (
-    <section className="card p-[18px]">
-      <h2 className="text-[15px] font-semibold">Home-screen widget</h2>
-      <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
+    <div>
+      <p className="text-[13px] leading-relaxed text-muted">
         A widget runs outside the app, so it signs in with a token rather than
         your password. The token is read-only — it can show today&apos;s numbers
         and nothing else.
@@ -55,7 +54,7 @@ export default function WidgetTokenCard({ tokens, siteUrl }) {
 
       {state?.token && (
         <div
-          className="mt-3.5 rounded-xl px-3.5 py-3"
+          className="mt-3.5 rounded-inner px-3.5 py-3"
           style={{ background: 'color-mix(in srgb, var(--warn) 12%, transparent)' }}
         >
           <p className="text-xs font-semibold" style={{ color: 'var(--warn)' }}>
@@ -139,6 +138,6 @@ export default function WidgetTokenCard({ tokens, siteUrl }) {
           {state.error}
         </p>
       )}
-    </section>
+    </div>
   );
 }

@@ -10,7 +10,7 @@ import {
   loadLedger,
 } from '@/lib/data';
 import { evaluateChallenge } from '@/lib/challenge';
-import { parseAmountToCents } from '@/lib/money';
+import { parseAmountToCents, MAX_AMOUNT } from '@/lib/money';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -31,7 +31,9 @@ export async function createChallenge(_prevState, formData) {
   // special handling anywhere.
   const capCents = parseAmountToCents(String(formData.get('cap') ?? ''));
   if (capCents === null) {
-    return { error: 'Daily cap must be a number, like 100 or 0.' };
+    return {
+      error: `Daily cap must be a number, like 100 or 0 (up to ${MAX_AMOUNT.toLocaleString('en-US')}).`,
+    };
   }
   if (capCents >= settings.daily_goal_cents) {
     return { error: 'The cap has to be below your daily goal, or nothing is saved.' };

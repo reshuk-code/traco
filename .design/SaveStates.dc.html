@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif; }
+    a { color: #6366f1; } a:hover { color: #818cf8; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { transform-origin: 50% 50%; animation: spin 0.7s linear infinite; }
+  </style>
+</helmet>
+
+<div style="width: 720px; height: 560px; background: #0b0e13; color: #e8ecf2; padding: 32px; display: flex; flex-direction: column; gap: 22px; overflow: hidden;">
+
+  <div>
+    <div style="font-size: 20px; font-weight: 700; letter-spacing: -0.02em;">Saving, four states</div>
+    <div style="margin-top: 6px; font-size: 14px; line-height: 1.55; color: #8d97a6; max-width: 560px;">
+      The button carries its own state, so the feedback lands where the thumb already is &mdash; no toast to catch, nothing to look away for. It settles back to Idle on its own after a couple of seconds.
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;">
+
+    <div style="background: #141922; border: 1px solid #262e3b; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #8d97a6;">1 &middot; Idle</div>
+      <div style="display: flex; align-items: center; justify-content: flex-end;">
+        <div style="display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; padding: 10px 18px; font-size: 15px; font-weight: 600; background: #20252f; color: #5c6675;">Save changes</div>
+      </div>
+      <div style="font-size: 13px; line-height: 1.5; color: #8d97a6;">Nothing has changed, so there is nothing to save. Present but plainly inert &mdash; a button that vanishes makes people hunt for it.</div>
+    </div>
+
+    <div style="background: #141922; border: 1px solid #262e3b; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #8d97a6;">2 &middot; Unsaved</div>
+      <div style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+        <span style="font-size: 13px; color: #fbbf24;">Unsaved changes</span>
+        <div style="display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; padding: 10px 18px; font-size: 15px; font-weight: 600; background: #6366f1; color: #ffffff;">Save changes</div>
+      </div>
+      <div style="font-size: 13px; line-height: 1.5; color: #8d97a6;">The moment a field is touched. The amber note is the warning you would otherwise only get by leaving the page.</div>
+    </div>
+
+    <div style="background: #141922; border: 1px solid #262e3b; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #8d97a6;">3 &middot; Saving</div>
+      <div style="display: flex; align-items: center; justify-content: flex-end;">
+        <div style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 10px; padding: 10px 18px; font-size: 15px; font-weight: 600; background: #4b4fc4; color: #ffffff;">
+          <svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="9" stroke="#ffffff" stroke-width="2.5" opacity="0.25" />
+            <path d="M21 12a9 9 0 0 0-9-9" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" />
+          </svg>
+          Saving…
+        </div>
+      </div>
+      <div style="font-size: 13px; line-height: 1.5; color: #8d97a6;">Same width, same place &mdash; the row must not jump as the label changes, or the eye loses it mid-save.</div>
+    </div>
+
+    <div style="background: #141922; border: 1px solid #262e3b; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #8d97a6;">4 &middot; Saved</div>
+      <div style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+        <span style="font-size: 13px; color: #8d97a6;">Just now</span>
+        <div style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 10px; padding: 10px 18px; font-size: 15px; font-weight: 600; background: rgba(52, 211, 153, 0.16); color: #34d399;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+          Saved
+        </div>
+      </div>
+      <div style="font-size: 13px; line-height: 1.5; color: #8d97a6;">Green, with a tick and a timestamp. Holds for about two seconds, then falls back to Idle so it never becomes decoration.</div>
+    </div>
+
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif; }
+    a { color: #6366f1; text-decoration: underline; } a:hover { color: #818cf8; }
+    .num { font-variant-numeric: tabular-nums; }
+  </style>
+</helmet>
+
+<div style="width: 390px; height: 844px; background: #0b0e13; color: #e8ecf2; display: flex; flex-direction: column; overflow: hidden; padding: 0 24px 24px;">
+
+  <div style="padding: 16px 0;">
+    <div style="font-size: 17px; font-weight: 700; letter-spacing: -0.02em;">traco</div>
+  </div>
+
+  <div style="padding-top: 20px;">
+    <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em;">Set your daily goal</div>
+    <div style="margin-top: 8px; font-size: 15px; line-height: 1.55; color: #8d97a6;">Start with a number that feels realistic &mdash; you can change it any time.</div>
+  </div>
+
+  <div style="margin-top: 20px; background: #141922; border: 1px solid #262e3b; border-radius: 16px; padding: 18px;">
+    <div style="display: flex; align-items: baseline; justify-content: space-between;">
+      <span style="font-size: 12px; color: #8d97a6;">Daily spending goal</span>
+      <span style="font-size: 12px; color: #8d97a6;">NPR</span>
+    </div>
+    <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px; border-radius: 10px; border: 1px solid #6366f1; background: #1b212c; padding: 12px 14px;">
+      <span style="font-size: 15px; font-weight: 600; color: #8d97a6;">Rs</span>
+      <span class="num" style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em;">200</span>
+    </div>
+  </div>
+
+  <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 12px;">
+    <div>
+      <label style="display: block; font-size: 13px; font-weight: 500; color: #8d97a6; margin-bottom: 6px;">Your name</label>
+      <div style="border-radius: 10px; border: 1px solid #262e3b; background: #1b212c; padding: 10px 12px; font-size: 15px; color: #6c7787;">Reshuk</div>
+    </div>
+    <div>
+      <label style="display: block; font-size: 13px; font-weight: 500; color: #8d97a6; margin-bottom: 6px;">Email</label>
+      <div style="border-radius: 10px; border: 1px solid #262e3b; background: #1b212c; padding: 10px 12px; font-size: 15px; color: #6c7787;">you@example.com</div>
+    </div>
+    <div>
+      <label style="display: block; font-size: 13px; font-weight: 500; color: #8d97a6; margin-bottom: 6px;">Password</label>
+      <div style="border-radius: 10px; border: 1px solid #262e3b; background: #1b212c; padding: 10px 12px; font-size: 15px; color: #6c7787;">At least 8 characters</div>
+    </div>
+  </div>
+
+  <!-- The consent sits with the button that acts on it, not buried at the top:
+       it is the last thing read before signing up. A real checkbox, never
+       pre-ticked — a pre-ticked box is not consent. -->
+  <div onClick="{{ toggle }}" style="margin-top: 18px; display: flex; align-items: flex-start; gap: 11px; cursor: pointer;">
+    <div style="flex: 0 0 auto; margin-top: 1px; width: 22px; height: 22px; border-radius: 7px; border: 1.5px solid {{ boxBorder }}; background: {{ boxBg }}; display: flex; align-items: center; justify-content: center;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="{{ tick }}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+    </div>
+    <div style="flex: 1 1 0; font-size: 13px; line-height: 1.55; color: #8d97a6;">
+      I agree to traco&rsquo;s <a href="#">Terms &amp; Conditions</a> and <a href="#">Privacy Policy</a>.
+    </div>
+  </div>
+
+  <div style="margin-top: 16px; display: flex; align-items: center; justify-content: center; border-radius: 10px; padding: 14px 16px; font-size: 15px; font-weight: 600; background: {{ btnBg }}; color: {{ btnFg }};">Create account</div>
+
+  <div style="flex: 1 1 0;"></div>
+
+  <div style="text-align: center; font-size: 14px; color: #8d97a6;">
+    Already have an account? <a href="#" style="font-weight: 600;">Sign in</a>
+  </div>
+
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { agreed: false };
+  }
+
+  renderVals() {
+    var self = this;
+    var on = this.state.agreed;
+    return {
+      toggle: function () { self.setState({ agreed: !self.state.agreed }); },
+      boxBorder: on ? '#6366f1' : '#39424f',
+      boxBg: on ? '#6366f1' : 'transparent',
+      tick: on ? '#ffffff' : 'transparent',
+      // Disabled until the box is ticked: the gate has to be visible, not a
+      // validation message that appears after the fact.
+      btnBg: on ? '#6366f1' : '#20252f',
+      btnFg: on ? '#ffffff' : '#5c6675'
+    };
+  }
+}
+</script>
+</body>
+</html>

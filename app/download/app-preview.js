@@ -21,7 +21,7 @@ export default function AppPreview() {
         <span className="text-[13px] tabular-nums text-muted">Rs 205 left</span>
       </div>
 
-      <div className="mt-3.5 rounded-xl bg-surface-2 px-3.5 py-3">
+      <div className="mt-3.5 rounded-inner bg-surface-2 px-3.5 py-3">
         <div className="flex items-center justify-between tabular-nums">
           <span className="text-[13px] text-muted">Today&apos;s goal</span>
           <span className="text-[13px] font-medium">Rs 200</span>

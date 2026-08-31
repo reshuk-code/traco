@@ -68,7 +68,7 @@ export default function ExpenseForm({ today, currency }) {
 
       <label
         htmlFor="amount"
-        className="flex items-center gap-2.5 rounded-[0.625rem] border border-border bg-surface-2 px-3.5 py-3 focus-within:border-brand"
+        className="flex items-center gap-2.5 rounded-field border border-border bg-surface-2 px-3.5 py-3 focus-within:border-brand"
       >
         <span className="text-[15px] font-semibold text-muted">{currencySymbol(currency)}</span>
         <input

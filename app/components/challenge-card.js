@@ -78,7 +78,7 @@ export default function ChallengeCard({
       </div>
 
       {/* Today against the cap — the number that decides whether the day counts. */}
-      <div className="mt-3.5 flex items-center justify-between gap-3 rounded-xl bg-surface-2 px-3.5 py-3 tabular-nums">
+      <div className="mt-3.5 flex items-center justify-between gap-3 rounded-inner bg-surface-2 px-3.5 py-3 tabular-nums">
         <span className="text-[13px] text-muted">
           Today {formatMoney(r.todaySpentCents, currency)}
           {r.capCents > 0 && <> of {formatMoney(r.capCents, currency)}</>}

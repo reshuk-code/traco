@@ -1,0 +1,39 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 390, "h": 844, "title": "Settings — tap Account or Appearance", "is_interactive": true },
+    { "file": "SaveStates.dc.html", "x": 500, "y": 0, "w": 720, "h": 560, "title": "Saving states" },
+    { "file": "SignUp.dc.html", "x": 1320, "y": 0, "w": 390, "h": 844, "title": "Sign up — accepting the terms", "is_interactive": true },
+    { "file": "TermsGate.dc.html", "x": 1810, "y": 0, "w": 390, "h": 844, "title": "Existing user — the gate", "is_interactive": true }
+  ],
+  "annotations": [
+    {
+      "id": "nav-rule",
+      "x": 0,
+      "y": -230,
+      "w": 390,
+      "text": "Drill-down, not accordions\n\nTap a row, get a page. The row shows its current value so the list still answers \"what is my goal, which theme\" without opening anything.\n\nOn a detail page:\n  · back arrow top-left, 44px target\n  · the page title replaces \"Settings\"\n  · the bottom nav is GONE\n\nDropping the nav is deliberate — with one way out, back is unmissable, and the page gets its full height. Tapping a tab mid-edit would also lose the edit silently.\n\nAccount and Appearance are wired here; the other rows are drawn but inert."
+    },
+    {
+      "id": "account-note",
+      "x": 0,
+      "y": 914,
+      "w": 390,
+      "text": "Account page carries everything about the person: avatar, name, member-since, the email marked read-only as the sign-in identity, then password and sign out, then delete.\n\nDelete account is last and separate. It is also the thing the privacy policy already promises but the app cannot yet do — designing it here is the first half of keeping that promise."
+    },
+    {
+      "id": "save-note",
+      "x": 500,
+      "y": 630,
+      "w": 720,
+      "text": "Four states, not two. \"Unsaved changes\" is the one usually missing, and it is the one that prevents the loss — otherwise you only learn the form was dirty by leaving it.\n\nThe button never changes width or position between states."
+    },
+    {
+      "id": "consent-note",
+      "x": 1320,
+      "y": 914,
+      "w": 880,
+      "text": "Two ways in, one record\n\nNew accounts accept at sign-up: a real checkbox, never pre-ticked, sitting directly above the button that acts on it. Create account stays disabled until it is ticked — a visible gate beats an error message after the fact.\n\nExisting accounts get the sheet on next open. Their own screen shows through behind it, dimmed: this is someone with data here, and the sheet should read as one step in front of their app rather than a wall that lost it.\n\nNo dismiss, no \"remind me later\" — consent that can be swiped away is not recorded consent. Sign out stays, because that is the honest way to decline.\n\nBoth need a column recording WHICH version was accepted and when, or you cannot prove anything later and cannot re-prompt when the terms change."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}

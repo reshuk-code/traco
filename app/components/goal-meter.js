@@ -20,19 +20,35 @@ export default function GoalMeter({
   const left = allowanceCents - spentCents;
   const over = left < 0;
 
+  // Formatted once: the strings drive both the display and the size the
+  // headline has to drop to in order to fit beside Available.
+  const spentLabel = formatMoney(spentCents, currency);
+  const allowanceLabel = formatMoney(allowanceCents, currency);
+
   return (
     <div>
-      <div className="flex items-end justify-between gap-4">
-        <div>
+      <div className="flex items-end justify-between gap-3">
+        <div className="min-w-0">
           <p className="text-xs text-muted">Spent today</p>
-          <p className="mt-1 text-4xl font-bold leading-none tracking-tight tabular-nums">
-            {formatMoney(spentCents, currency)}
+          {/*
+            The headline shrinks as the number grows. A fixed text-4xl is fine
+            at "NPR 145" and runs straight through the Available column at
+            "NPR 23,142.00" — and min-w-0 is what actually lets a flex child
+            give way, since flex items refuse to shrink below their content
+            without it.
+          */}
+          <p
+            className={`mt-1 truncate font-bold leading-none tracking-tight tabular-nums ${spentLabel.length > 13 ? 'text-2xl' : spentLabel.length > 10 ? 'text-3xl' : 'text-4xl'}`}
+          >
+            {spentLabel}
           </p>
         </div>
-        <div className="text-right">
+        <div className="min-w-0 shrink-0 text-right">
           <p className="text-xs text-muted">{rollover ? 'Available' : 'Goal'}</p>
-          <p className="mt-1 text-lg font-bold tabular-nums">
-            {formatMoney(allowanceCents, currency)}
+          <p
+            className={`mt-1 font-bold tabular-nums ${allowanceLabel.length > 13 ? 'text-sm' : 'text-lg'}`}
+          >
+            {allowanceLabel}
           </p>
         </div>
       </div>
@@ -62,7 +78,7 @@ export default function GoalMeter({
 
       {over ? (
         <p
-          className="mt-3.5 rounded-xl px-3.5 py-3 text-[13px] leading-relaxed"
+          className="mt-3.5 rounded-inner px-3.5 py-3 text-[13px] leading-relaxed"
           role="status"
           style={{
             background: 'color-mix(in srgb, var(--over) 12%, transparent)',
@@ -77,7 +93,7 @@ export default function GoalMeter({
         </p>
       ) : (
         rollover && (
-          <div className="mt-3.5 flex items-center justify-between gap-3 rounded-xl bg-surface-2 px-3.5 py-3 tabular-nums">
+          <div className="mt-3.5 flex items-center justify-between gap-3 rounded-inner bg-surface-2 px-3.5 py-3 tabular-nums">
             <span className="text-[13px] text-muted">
               Goal {formatMoney(baseCents, currency)}
               {carryInCents > 0 && (
