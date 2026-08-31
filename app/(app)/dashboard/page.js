@@ -3,8 +3,16 @@ import PageHeader from '@/app/components/page-header';
 import TodayView from '@/app/components/today-view';
 import OfflineNotice from '@/app/components/offline-notice';
 import WeekChart from '@/app/components/week-chart';
+import ChallengeCard from '@/app/components/challenge-card';
 import { isConnectivityError } from '@/lib/db';
-import { requireUser, getSettings, getToday, getExpensesForDay, loadLedger } from '@/lib/data';
+import {
+  requireUser,
+  getSettings,
+  getToday,
+  getExpensesForDay,
+  loadLedger,
+  getActiveChallenge,
+} from '@/lib/data';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,13 +25,15 @@ export default async function DashboardPage() {
   let today;
   let ledger;
   let todayExpenses;
+  let challenge;
 
   try {
     settings = await getSettings(user.id);
     today = await getToday(settings.timezone);
-    [ledger, todayExpenses] = await Promise.all([
+    [ledger, todayExpenses, challenge] = await Promise.all([
       loadLedger(user.id, settings, today),
       getExpensesForDay(user.id, today),
+      getActiveChallenge(user.id),
     ]);
   } catch (error) {
     if (!isConnectivityError(error)) throw error;
@@ -38,6 +48,15 @@ export default async function DashboardPage() {
   }
 
   const currentDay = ledger.at(-1);
+
+  // Only the slice the challenge covers goes to the client, which then folds in
+  // the outbox and evaluates. Three fields per day is all the evaluator reads.
+  const challengeDays = challenge
+    ? ledger
+        .filter((d) => d.day >= challenge.starts_on && d.day <= challenge.ends_on)
+        .map((d) => ({ day: d.day, base_cents: d.base_cents, spent_cents: d.spent_cents }))
+    : null;
+
   const prettyDate = new Date(`${today}T00:00:00`).toLocaleDateString('en-US', {
     weekday: 'long',
     day: 'numeric',
@@ -68,6 +87,16 @@ export default async function DashboardPage() {
           today={today}
           currency={settings.currency}
           rollover={settings.rollover_enabled}
+          challengeSlot={
+            challenge ? (
+              <ChallengeCard
+                challenge={challenge}
+                challengeDays={challengeDays}
+                today={today}
+                currency={settings.currency}
+              />
+            ) : null
+          }
         />
 
         <section className="card p-[18px]">

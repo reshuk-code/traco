@@ -1,0 +1,23 @@
+{
+  "packageId": "app.vercel.traco_pi",
+  "host": "traco-pi.vercel.app",
+  "name": "traco — daily spending tracker",
+  "launcherName": "traco",
+  "display": "standalone",
+  "orientation": "portrait",
+  "themeColor": "#4f46e5",
+  "navigationColor": "#0b0e13",
+  "backgroundColor": "#0b0e13",
+  "startUrl": "/dashboard",
+  "iconUrl": "https://traco-pi.vercel.app/icon-512.png",
+  "maskableIconUrl": "https://traco-pi.vercel.app/icon-maskable-512.png",
+  "shortcuts": [
+    { "name": "Log an expense", "shortName": "Log", "url": "/dashboard?log=1" },
+    { "name": "Your challenge", "shortName": "Challenge", "url": "/challenges" },
+    { "name": "History", "shortName": "History", "url": "/history" }
+  ],
+  "enableNotifications": true,
+  "fallbackType": "customtabs",
+  "features": {},
+  "signingKey": { "path": "./android.keystore", "alias": "traco" }
+}

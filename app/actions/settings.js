@@ -5,6 +5,7 @@ import { auth } from '@/lib/auth/server';
 import { sql } from '@/lib/db';
 import { requireUser, getSettings, getToday } from '@/lib/data';
 import { parseAmountToCents, CURRENCIES } from '@/lib/money';
+import { isValidTimezone } from '@/lib/timezone';
 
 export async function updateSettings(_prevState, formData) {
   const user = await requireUser();
@@ -24,6 +25,9 @@ export async function updateSettings(_prevState, formData) {
   }
 
   const timezone = String(formData.get('timezone') ?? current.timezone) || 'UTC';
+  if (!isValidTimezone(timezone)) {
+    return { error: 'That is not a timezone name. Try Detect, or e.g. Asia/Kathmandu.' };
+  }
   const rollover = formData.get('rollover_enabled') === 'on';
 
   if (name !== user.name) {

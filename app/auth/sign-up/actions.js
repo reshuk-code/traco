@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth/server';
 import { sql } from '@/lib/db';
 import { parseAmountToCents } from '@/lib/money';
+import { isValidTimezone } from '@/lib/timezone';
 
 export async function signUpWithEmail(_prevState, formData) {
   const name = String(formData.get('name') ?? '').trim();
@@ -11,7 +12,8 @@ export async function signUpWithEmail(_prevState, formData) {
   const password = String(formData.get('password') ?? '');
   const goalRaw = String(formData.get('daily_goal') ?? '').trim();
   const currency = String(formData.get('currency') ?? 'NPR');
-  const timezone = String(formData.get('timezone') ?? 'UTC') || 'UTC';
+  const rawTimezone = String(formData.get('timezone') ?? 'UTC');
+  const timezone = isValidTimezone(rawTimezone) ? rawTimezone : 'UTC';
 
   if (!name) return { error: 'Please enter your name.' };
   if (!email) return { error: 'Please enter your email address.' };

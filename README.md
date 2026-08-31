@@ -15,6 +15,11 @@ Built with Next.js 16 (App Router), Neon Postgres, and Neon Auth.
   itself when you're back.
 - **Your day, not UTC** — day boundaries follow your own timezone.
 - **A shareable install page** at `/download`, with generated link previews.
+- **Challenges** — hold yourself to a stricter daily cap for a stretch of days,
+  scored separately from your real budget (see below).
+- **A daily reminder** — one push notification with what is left and how the
+  challenge is going, so you do not have to open the app to find out.
+- **Launcher shortcuts**, and an optional Android home-screen widget.
 
 ## How the rollover works
 
@@ -42,6 +47,87 @@ on its own.
 Goal changes are versioned in `goal_history`, so a past day is always compared
 against the goal that was actually in force on that day — lowering your goal
 today never retroactively turns an old good day into a bad one.
+
+## Challenges
+
+A challenge is a stricter daily cap you opt into — "stay under Rs 100 a day for
+25 days" — held for a fixed window and scored on its own.
+
+It **never changes the budget maths**. The Today meter keeps showing your real
+goal plus rollover; the challenge reports a second, independent verdict beside
+it. The two are allowed to disagree, and that is the point: ending a challenge
+can never retroactively re-score days you already lived, which is the same
+principle `goal_history` exists to protect.
+
+Because of that separation a challenge is **data, not code**: one row
+(`cap_cents`, a window, `allowed_slips`) plus one pure function,
+`evaluateChallenge` in `lib/challenge.js`, reading the ledger `buildLedger`
+already produces. Every user runs a different challenge with no user-specific
+branching anywhere.
+
+Details worth knowing:
+
+- **Recovery is scoped to a window you pick** — the last 2, 3, 7, 14 or 30 days,
+  or a specific date. Summing overspend across all history climbs forever and
+  names a number no challenge can clear.
+- **Slip days** (default 2) mean one bad afternoon does not end a three-week run.
+  A challenge fails only when slips *exceed* the allowance.
+- **A cap of 0 is a no-spend run** — the same code path, no special case.
+- `completed` and `failed` are **derived from the ledger on every read**, never
+  written on a schedule, so there is no cron and no write-on-read. Only
+  `abandoned` is stored, because quitting is a choice the data cannot imply.
+- The challenge card counts anything still in the offline outbox, so a day
+  logged with no signal still counts against the cap.
+
+## Daily reminders
+
+One push notification a day, at an hour you choose, in your own timezone:
+
+```
+NPR 205.00 left today
+Day 3 of 25 · on track · 2 slips left
+[ Log an expense ]
+```
+
+The cron at `/api/push/daily` runs **hourly** and sends to a user only when the
+hour in *their* timezone matches the one they picked — a fixed daily UTC job
+would reach everyone at a different local time. `last_sent_on` stores the
+user’s **local** day, which is what makes hourly firing safe: a retry, a
+redeploy or a duplicate run cannot notify twice.
+
+If your Vercel plan only triggers crons once a day, set the schedule in
+`vercel.json` to the single UTC time matching your own timezone instead.
+
+Subscriptions are per **device**, so a phone and a laptop are two rows. Turning
+reminders off unsubscribes only the device you are holding; the hour clears once
+no device is left listening. Signing out releases that device too.
+
+Expired subscriptions (404/410 from the push service) are deleted on the next
+run. Other failures are left alone to retry.
+
+## Home-screen widget
+
+A PWA **cannot** draw an Android home-screen widget — those are
+`AppWidgetProvider` + `RemoteViews` inside a real APK, and no web API exposes
+them. (The `widgets` member in the manifest spec targets the Windows 11 Widgets
+Board, not Android home screens.)
+
+What exists instead:
+
+- **Launcher shortcuts** (`app/manifest.js`) — long-press the icon for Log,
+  Today, Challenge and History. Android caches the WebAPK at install time, so
+  these appear only after re-adding the app to the home screen.
+- **`GET /api/widget/summary`** — everything a widget draws, in one request,
+  authenticated by a read-only bearer token generated in Settings. Only the
+  token hash is stored; the raw value is shown once. The token may be sent as a
+  header *or* as `?token=`, because most widget apps (KWGT, Tasker) can only
+  fetch a plain URL — a trade-off documented in the route itself.
+- **`android/`** — a Bubblewrap TWA config plus Kotlin widget sources, for
+  wrapping traco in a real APK. See `android/README.md`. That scaffold has never
+  been compiled.
+
+The endpoint returns preformatted display strings alongside the raw numbers, so
+the native side never reimplements currency or rollover logic.
 
 ## How offline works
 
@@ -106,6 +192,10 @@ generate a cookie secret:
 ```bash
 openssl rand -base64 32
 ```
+
+For the daily reminder, also generate a Web Push keypair and a cron secret, then
+set `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` and
+`CRON_SECRET`. Reminders need HTTPS, so they will not fire on localhost.
 
 When you deploy, `metadataBase` resolves the site's public URL in this order:
 
@@ -176,10 +266,14 @@ sync.
 app/
   (app)/              authenticated screens, sharing a header and layout
     dashboard/        today: budget, log form, entries, 7-day chart
+    challenges/       start a challenge, track it, past runs
     history/          day-by-day ledger, expandable to every expense
-    settings/         name, goal, currency, timezone, rollover toggle
-  actions/            server actions (expenses, settings)
+    settings/         goal, currency, timezone, rollover, reminder, widget token
+  actions/            server actions (expenses, settings, challenges, push, widget)
   api/auth/[...path]/ Neon Auth handler
+  api/push/daily/     hourly reminder sender (cron-authenticated)
+  api/widget/summary/ widget feed (bearer-token authenticated)
+  api/assetlinks/     Digital Asset Links, rewritten to /.well-known/
   auth/               sign-in and sign-up
   components/         UI, including the offline-aware pieces
   download/           public install page, platform-aware steps, OG image
@@ -188,14 +282,20 @@ app/
   opengraph-image.js  generated link preview
 lib/
   budget.js           rollover ledger maths (pure, no I/O)
+  challenge.js        challenge evaluation and presets (pure, no I/O)
+  timezone.js         IANA name validation, before it can reach Postgres
+  push.js             browser push subscription helpers
+  widget-token.js     widget token hashing, constant-time compare
   og-template.js      shared Open Graph artwork
   data.js             queries and the session helper
   db.js               Neon client, plus outage-vs-bug error classification
   money.js            minor-unit parsing and formatting
   outbox.js           offline queue
 db/schema.sql         database schema
+android/              TWA config + Kotlin home-screen widget (uncompiled)
 proxy.js              route protection (Next.js 16's replacement for middleware)
-public/sw.js          service worker
+public/sw.js          service worker: offline shell, push, notification clicks
+vercel.json           cron schedule for the daily reminder
 ```
 
 Money is stored as **integer minor units** (paisa/cents), never floats, so sums
@@ -208,3 +308,10 @@ and comparisons are exact.
   currently beta/experimental upstream.
 - Auth cookies are `Secure`, so sign-in needs HTTPS or `localhost`.
 - `AGENTS.md` is generated by `next dev` and is intentionally committed.
+- The service worker is registered in development too, as `/sw.js?dev=1`, which
+  makes it skip caching entirely. Push needs a worker, and dev must not get a
+  cache-first one. Keying that on the registration URL rather than the hostname
+  keeps `npm start` on localhost a fair offline test.
+- Timezone names are validated before they reach the database — Postgres raises
+  on a name it does not know, and that error is not contained. See
+  `lib/timezone.js`.

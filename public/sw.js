@@ -1,6 +1,15 @@
 /* traco service worker — makes the app open with no network at all. */
 
-const VERSION = 'traco-v2';
+const VERSION = 'traco-v4';
+
+// In development this worker exists purely to receive push, and must not touch
+// caching: Turbopack serves assets from stable URLs whose contents change on
+// every edit, so a cache-first worker would pin the first stylesheet it ever saw.
+//
+// Keyed on how it was registered, not on the hostname — a production build run
+// locally with `npm start` is still on localhost, and offline testing there has
+// to keep working.
+const IS_DEV = new URL(self.location.href).searchParams.get('dev') === '1';
 const SHELL = `${VERSION}-shell`;
 const PAGES = `${VERSION}-pages`;
 const ASSETS = `${VERSION}-assets`;
@@ -14,6 +23,11 @@ const PRECACHE = [
 ];
 
 self.addEventListener('install', (event) => {
+  if (IS_DEV) {
+    event.waitUntil(self.skipWaiting());
+    return;
+  }
+
   event.waitUntil(
     caches
       .open(SHELL)
@@ -66,6 +80,9 @@ async function cacheFirst(request, cacheName) {
 }
 
 self.addEventListener('fetch', (event) => {
+  // Dev: stay out of the way entirely. Push handlers below still run.
+  if (IS_DEV) return;
+
   const { request } = event;
   const url = new URL(request.url);
 
@@ -104,5 +121,56 @@ self.addEventListener('fetch', (event) => {
     cacheFirst(request, ASSETS).catch(
       () => new Response('', { status: 504 }),
     ),
+  );
+});
+
+/**
+ * The daily reminder. This is the only part of traco that reaches the user
+ * without the app being opened, so it has to say something worth reading on a
+ * lock screen: what is left today, and how the challenge is going.
+ */
+self.addEventListener('push', (event) => {
+  let payload = {};
+  try {
+    payload = event.data ? event.data.json() : {};
+  } catch {
+    // A malformed push should still show something rather than nothing.
+  }
+
+  event.waitUntil(
+    self.registration.showNotification(payload.title || 'traco', {
+      body: payload.body || '',
+      icon: '/icon-192.png',
+      badge: '/icon-192.png',
+      // One reminder per day replaces the last, rather than stacking up.
+      tag: payload.tag || 'traco-daily',
+      renotify: true,
+      data: { url: payload.url || '/dashboard' },
+      actions: [{ action: 'log', title: 'Log an expense' }],
+    }),
+  );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  const target =
+    event.action === 'log' ? '/dashboard?log=1' : event.notification.data?.url || '/dashboard';
+
+  // Reuse an open traco tab if there is one; only open a window as a last resort.
+  event.waitUntil(
+    (async () => {
+      const clients = await self.clients.matchAll({
+        type: 'window',
+        includeUncontrolled: true,
+      });
+      for (const client of clients) {
+        if (new URL(client.url).origin === self.location.origin) {
+          await client.focus();
+          return client.navigate(target);
+        }
+      }
+      return self.clients.openWindow(target);
+    })(),
   );
 });

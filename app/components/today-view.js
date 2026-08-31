@@ -9,7 +9,7 @@ import { useOutbox } from './use-outbox';
  * Today's numbers, with anything still sitting in the offline outbox folded in
  * so the totals on screen match what the user actually spent — synced or not.
  */
-export default function TodayView({ day, expenses, today, currency, rollover }) {
+export default function TodayView({ day, expenses, today, currency, rollover, challengeSlot }) {
   const outbox = useOutbox();
 
   const pendingToday = outbox.filter((e) => e.spent_on === today);
@@ -29,6 +29,10 @@ export default function TodayView({ day, expenses, today, currency, rollover }) 
           rollover={rollover}
         />
       </section>
+
+      {/* The challenge sits directly under the meter: two verdicts on the same
+          day, which are allowed to disagree. */}
+      {challengeSlot}
 
       <section className="card p-[18px]">
         <h2 className="mb-3 text-[13px] font-semibold">Log an expense</h2>

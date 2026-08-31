@@ -72,7 +72,8 @@ export async function addExpense(_prevState, formData) {
 export async function deleteExpense(formData) {
   const user = await requireUser();
   const id = String(formData.get('id') ?? '');
-  if (!id) return;
+  // A non-uuid makes Postgres raise a cast error rather than matching nothing.
+  if (!UUID_RE.test(id)) return;
 
   // Scoping the delete to the session user is what enforces ownership.
   await sql`

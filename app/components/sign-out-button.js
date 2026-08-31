@@ -2,17 +2,29 @@
 
 import { useTransition } from 'react';
 import { signOut } from '@/app/auth/actions';
+import { disablePushReminders } from '@/app/actions/push';
+import { unsubscribeFromPush } from '@/lib/push';
 import Spinner from './spinner';
 
 /**
  * Signing out also clears the offline copies of this account's pages, so the
- * next person to open the app on this device cannot page through cached data.
+ * next person to open the app on this device cannot page through cached data,
+ * and releases the push subscription — otherwise the daily reminder would keep
+ * announcing this account's balance on the lock screen of a signed-out phone.
  */
 export default function SignOutButton() {
   const [isPending, startTransition] = useTransition();
 
   function handleSignOut() {
     startTransition(async () => {
+      try {
+        // Do this before the session goes: the action needs to be authenticated.
+        const endpoint = await unsubscribeFromPush();
+        if (endpoint) await disablePushReminders(endpoint);
+      } catch {
+        // Never block signing out over a subscription that would not release.
+      }
+
       try {
         if ('caches' in window) {
           const keys = await caches.keys();

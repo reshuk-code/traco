@@ -1,6 +1,7 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useOffline } from 'next/offline';
 import { addExpense } from '@/app/actions/expenses';
 import { addToOutbox, newId } from '@/lib/outbox';
@@ -27,6 +28,14 @@ function buildEntry(formData, id, fallbackDate) {
 export default function ExpenseForm({ today, currency }) {
   const isOffline = useOffline();
   const [category, setCategory] = useState('food');
+  const amountRef = useRef(null);
+
+  // The launcher shortcut lands here with the keyboard already up, so logging
+  // from the home screen is one tap and a number.
+  const wantsLog = useSearchParams().get('log') === '1';
+  useEffect(() => {
+    if (wantsLog) amountRef.current?.focus();
+  }, [wantsLog]);
   const [showDetails, setShowDetails] = useState(false);
 
   const [state, formAction, isPending] = useActionState(async (prev, formData) => {
@@ -63,6 +72,7 @@ export default function ExpenseForm({ today, currency }) {
       >
         <span className="text-[15px] font-semibold text-muted">{currencySymbol(currency)}</span>
         <input
+          ref={amountRef}
           id="amount"
           name="amount"
           type="text"

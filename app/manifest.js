@@ -10,6 +10,39 @@ export default function manifest() {
     orientation: 'portrait',
     background_color: '#0b0e13',
     theme_color: '#4f46e5',
+    // Android has no widget API for web apps, so the long-press menu on the
+    // home-screen icon is the closest thing: one tap from the launcher to the
+    // screen you actually wanted, instead of landing on Today every time.
+    shortcuts: [
+      {
+        name: 'Log an expense',
+        short_name: 'Log',
+        description: 'Add what you just spent',
+        url: '/dashboard?log=1',
+        icons: [{ src: '/icon-192.png', sizes: '192x192', type: 'image/png' }],
+      },
+      {
+        name: "Today's spending",
+        short_name: 'Today',
+        description: 'What is left of today',
+        url: '/dashboard',
+        icons: [{ src: '/icon-192.png', sizes: '192x192', type: 'image/png' }],
+      },
+      {
+        name: 'Your challenge',
+        short_name: 'Challenge',
+        description: 'How the current run is going',
+        url: '/challenges',
+        icons: [{ src: '/icon-192.png', sizes: '192x192', type: 'image/png' }],
+      },
+      {
+        name: 'History',
+        short_name: 'History',
+        description: 'Every day you have tracked',
+        url: '/history',
+        icons: [{ src: '/icon-192.png', sizes: '192x192', type: 'image/png' }],
+      },
+    ],
     icons: [
       { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
       { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },

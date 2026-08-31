@@ -12,6 +12,16 @@ function TodayIcon({ active }) {
   );
 }
 
+function ChallengeIcon({ active }) {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"
+      stroke="currentColor" strokeWidth={active ? 2.2 : 1.8} strokeLinecap="round">
+      <circle cx="12" cy="12" r="8" />
+      <circle cx="12" cy="12" r="3.2" />
+    </svg>
+  );
+}
+
 function HistoryIcon({ active }) {
   return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"
@@ -34,6 +44,7 @@ function SettingsIcon({ active }) {
 
 const TABS = [
   { href: '/dashboard', label: 'Today', Icon: TodayIcon },
+  { href: '/challenges', label: 'Challenge', Icon: ChallengeIcon },
   { href: '/history', label: 'History', Icon: HistoryIcon },
   { href: '/settings', label: 'Settings', Icon: SettingsIcon },
 ];

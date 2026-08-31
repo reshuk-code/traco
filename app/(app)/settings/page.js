@@ -1,6 +1,8 @@
 import PageHeader from '@/app/components/page-header';
 import SignOutButton from '@/app/components/sign-out-button';
 import SettingsForm from './settings-form';
+import ReminderToggle from '@/app/components/reminder-toggle';
+import WidgetTokenCard from '@/app/components/widget-token-card';
 import { requireUser, getSettings, getToday, loadLedger } from '@/lib/data';
 import { summarize } from '@/lib/budget';
 import { sql } from '@/lib/db';
@@ -15,7 +17,7 @@ export default async function SettingsPage() {
   const settings = await getSettings(user.id);
   const today = await getToday(settings.timezone);
 
-  const [ledger, goalChanges] = await Promise.all([
+  const [ledger, goalChanges, reminder, widgetTokens] = await Promise.all([
     loadLedger(user.id, settings, today),
     sql`
       select distinct on (effective_from)
@@ -24,6 +26,13 @@ export default async function SettingsPage() {
       where user_id = ${user.id}
       order by effective_from desc, created_at desc
       limit 20
+    `,
+    sql`select reminder_hour from public.user_settings where user_id = ${user.id}`,
+    sql`
+      select id, label, created_at, last_used_at
+      from public.widget_tokens
+      where user_id = ${user.id}
+      order by created_at desc
     `,
   ]);
 
@@ -56,6 +65,14 @@ export default async function SettingsPage() {
           settings={settings}
           averageLabel={averageLabel}
         />
+
+        <ReminderToggle
+          reminderHour={reminder[0]?.reminder_hour ?? null}
+          publicKey={process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY}
+          timezone={settings.timezone}
+        />
+
+        <WidgetTokenCard tokens={widgetTokens} siteUrl={process.env.NEXT_PUBLIC_SITE_URL ?? ''} />
 
         {goalChanges.length > 0 && (
           <section className="card p-[18px]">
