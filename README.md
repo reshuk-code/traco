@@ -95,8 +95,43 @@ would reach everyone at a different local time. `last_sent_on` stores the
 user’s **local** day, which is what makes hourly firing safe: a retry, a
 redeploy or a duplicate run cannot notify twice.
 
-If your Vercel plan only triggers crons once a day, set the schedule in
-`vercel.json` to the single UTC time matching your own timezone instead.
+### Triggering it without paying for anything
+
+The sender decides *who* is due on its own, so whatever calls it only has to
+knock often enough. Two triggers ship, and running both is safe — duplicate
+calls no-op against `last_sent_on`:
+
+**GitHub Actions** (`.github/workflows/daily-reminder.yml`) runs hourly and is
+free. Add two repository secrets under Settings → Secrets and variables →
+Actions:
+
+| Secret | Value |
+| --- | --- |
+| `CRON_SECRET` | the same value as the deployed environment variable |
+| `SITE_URL` | `https://your-app.vercel.app`, no trailing slash |
+
+Then fire it by hand once from the Actions tab (`Run workflow`) to check it.
+
+Two things to know about GitHub’s scheduler: runs are often a few minutes late,
+which does not matter here because the sender re-checks the hour itself; and
+scheduled workflows are **disabled automatically after 60 days without repo
+activity**, so a dormant repo quietly stops notifying.
+
+**Vercel Cron** (`vercel.json`) is the backstop, set to `15 14 * * *` — 20:00 in
+Asia/Kathmandu. Cron jobs are not a paid feature, but lower plans trigger them
+roughly once a day rather than hourly, so a single daily run only reaches users
+whose chosen hour lines up with that moment. Change the time to match your own
+timezone, or delete `vercel.json` entirely if GitHub Actions is doing the work.
+
+Anything that can call a URL on a schedule works just as well — an external cron
+service, a home server, a phone automation app. The only requirement is the
+`Authorization: Bearer $CRON_SECRET` header.
+
+```bash
+# what any of them are doing
+curl -H "Authorization: Bearer $CRON_SECRET" https://your-app.vercel.app/api/push/daily
+# -> {"candidates":1,"due":1,"sent":1,"expired":0,"failed":0,"skipped":0}
+```
 
 Subscriptions are per **device**, so a phone and a laptop are two rows. Turning
 reminders off unsubscribes only the device you are holding; the hour clears once
@@ -293,6 +328,7 @@ lib/
   outbox.js           offline queue
 db/schema.sql         database schema
 android/              TWA config + Kotlin home-screen widget (uncompiled)
+.github/workflows/    hourly trigger for the reminder sender
 proxy.js              route protection (Next.js 16's replacement for middleware)
 public/sw.js          service worker: offline shell, push, notification clicks
 vercel.json           cron schedule for the daily reminder

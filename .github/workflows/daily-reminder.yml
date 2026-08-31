@@ -1,0 +1,51 @@
+# Triggers traco's reminder sender.
+#
+# The sender decides *who* is actually due — a user is only notified when the
+# hour in their own timezone matches the one they picked — so this just has to
+# knock on the door often enough. Running hourly covers every timezone.
+#
+# Firing more than once for the same user in the same day is harmless:
+# `last_sent_on` stores the user's local day, so duplicate triggers no-op.
+name: Daily reminder
+
+on:
+  schedule:
+    # Hourly. GitHub often runs scheduled jobs a few minutes late, which does
+    # not matter here — the sender re-checks the hour itself.
+    - cron: '0 * * * *'
+  # Lets you fire it by hand from the Actions tab to test.
+  workflow_dispatch:
+
+# Never let two runs overlap.
+concurrency:
+  group: traco-reminder
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Trigger the sender
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          SITE_URL: ${{ secrets.SITE_URL }}
+        run: |
+          if [ -z "$CRON_SECRET" ] || [ -z "$SITE_URL" ]; then
+            echo "::error::Set the CRON_SECRET and SITE_URL repository secrets."
+            exit 1
+          fi
+
+          status=$(curl -sS --max-time 60 \
+            -o response.json -w '%{http_code}' \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$SITE_URL/api/push/daily")
+
+          echo "HTTP $status"
+          cat response.json
+          echo
+
+          if [ "$status" != "200" ]; then
+            echo "::error::Sender returned $status"
+            exit 1
+          fi
