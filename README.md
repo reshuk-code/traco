@@ -157,7 +157,7 @@ What exists instead:
   token hash is stored; the raw value is shown once. The token may be sent as a
   header *or* as `?token=`, because most widget apps (KWGT, Tasker) can only
   fetch a plain URL — a trade-off documented in the route itself.
-- **`android/`** — a Bubblewrap TWA config plus Kotlin widget sources, for
+- **`android/`** — a Bubblewrap TWA project plus Java widget sources, for
   wrapping traco in a real APK. See `android/README.md`. That scaffold has never
   been compiled.
 

@@ -8,11 +8,11 @@ export const dynamic = 'force-dynamic';
  * usual reason a TWA "looks wrong" after install.
  *
  * The fingerprint comes from the signing keystore:
- *   keytool -list -v -keystore android.keystore -alias traco
+ *   keytool -list -v -keystore android.keystore -alias android
  */
 export function GET() {
   const fingerprint = process.env.ANDROID_CERT_FINGERPRINT;
-  const packageName = process.env.ANDROID_PACKAGE_NAME || 'app.vercel.traco_pi';
+  const packageName = process.env.ANDROID_PACKAGE_NAME || 'app.vercel.traco_pi.twa';
 
   const body = fingerprint
     ? [

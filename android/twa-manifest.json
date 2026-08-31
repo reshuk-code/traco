@@ -1,23 +1,72 @@
 {
-  "packageId": "app.vercel.traco_pi",
+  "packageId": "app.vercel.traco_pi.twa",
   "host": "traco-pi.vercel.app",
   "name": "traco — daily spending tracker",
   "launcherName": "traco",
   "display": "standalone",
-  "orientation": "portrait",
-  "themeColor": "#4f46e5",
-  "navigationColor": "#0b0e13",
-  "backgroundColor": "#0b0e13",
+  "themeColor": "#4F46E5",
+  "themeColorDark": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#0B0E13",
+  "enableNotifications": true,
   "startUrl": "/dashboard",
   "iconUrl": "https://traco-pi.vercel.app/icon-512.png",
   "maskableIconUrl": "https://traco-pi.vercel.app/icon-maskable-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "C:\\Users\\Reshuk\\Desktop\\Projects\\traco\\android\\android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "1",
+  "appVersionCode": 1,
   "shortcuts": [
-    { "name": "Log an expense", "shortName": "Log", "url": "/dashboard?log=1" },
-    { "name": "Your challenge", "shortName": "Challenge", "url": "/challenges" },
-    { "name": "History", "shortName": "History", "url": "/history" }
+    {
+      "name": "Log an expense",
+      "shortName": "Log",
+      "url": "https://traco-pi.vercel.app/dashboard?log=1",
+      "chosenIconUrl": "https://traco-pi.vercel.app/icon-192.png"
+    },
+    {
+      "name": "Today's spending",
+      "shortName": "Today",
+      "url": "https://traco-pi.vercel.app/dashboard",
+      "chosenIconUrl": "https://traco-pi.vercel.app/icon-192.png"
+    },
+    {
+      "name": "Your challenge",
+      "shortName": "Challenge",
+      "url": "https://traco-pi.vercel.app/challenges",
+      "chosenIconUrl": "https://traco-pi.vercel.app/icon-192.png"
+    },
+    {
+      "name": "History",
+      "shortName": "History",
+      "url": "https://traco-pi.vercel.app/history",
+      "chosenIconUrl": "https://traco-pi.vercel.app/icon-192.png"
+    }
   ],
-  "enableNotifications": true,
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://traco-pi.vercel.app/manifest.webmanifest",
   "fallbackType": "customtabs",
   "features": {},
-  "signingKey": { "path": "./android.keystore", "alias": "traco" }
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://traco-pi.vercel.app/",
+  "minSdkVersion": 21,
+  "orientation": "portrait",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [],
+  "appVersion": "1"
 }

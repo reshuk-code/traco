@@ -42,3 +42,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Android / TWA
+# The keystore IS your app's identity — losing it means you can never ship an
+# update, and publishing it lets anyone sign as you. Never commit it.
+*.keystore
+*.jks
+android/local.properties
+android/.gradle/
+android/build/
+android/app/build/
+android/app/release/
+android/*.apk
+android/*.aab
